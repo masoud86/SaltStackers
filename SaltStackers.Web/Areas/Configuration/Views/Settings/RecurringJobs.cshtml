@@ -1,0 +1,44 @@
+﻿@{
+    ViewData["Title"] = "Recurring Jobs";
+    ViewData["Icon"] = Icon.Settings;
+}
+
+<table class="table table-hover table-striped align-middle">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Cron</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr class="table-light">
+            <td>UpdatePrices</td>
+            <td>Update recipes' price</td>
+            <td>Hourly</td>
+            <td><button class="btn btn-sm btn-primary" v-on:click.prevent="updatePrices()">Add or Update</button></td>
+        </tr>
+        <tr>
+            <td>CalculateRecipes</td>
+            <td>Calculate price and nutrition facts of recipes</td>
+            <td>Daily</td>
+            <td><button class="btn btn-sm btn-primary" v-on:click.prevent="calculateRecipes()">Add or Update</button></td>
+        </tr>
+        <tr>
+            <td>UpdateOrderWeek</td>
+            <td>Update order week dates</td>
+            <td>Hourly</td>
+            <td><button class="btn btn-sm btn-primary" v-on:click.prevent="updateOrderWeek()">Add or Update</button></td>
+        </tr>
+        <tr>
+            <td>UpdateOrdersStatus</td>
+            <td>Update orders status</td>
+            <td>Daily</td>
+            <td><button class="btn btn-sm btn-primary" v-on:click.prevent="updateOrdersStatus()">Add or Update</button></td>
+        </tr>
+    </tbody>
+</table>
+@section scripts {
+<script src="~/dist/js/page/configuration/recurring-jobs.js?ver=@ConfigHelper.CurrentVersion()"></script>
+}

@@ -1,0 +1,423 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ActivityLevel" xml:space="preserve">
+    <value>Activity Level</value>
+  </data>
+  <data name="ActivityLevels" xml:space="preserve">
+    <value>Activity Levels</value>
+  </data>
+  <data name="Amount" xml:space="preserve">
+    <value>Amount</value>
+  </data>
+  <data name="BloodType" xml:space="preserve">
+    <value>Blood Type</value>
+  </data>
+  <data name="BloodTypes" xml:space="preserve">
+    <value>Blood Types</value>
+  </data>
+  <data name="BodyFat" xml:space="preserve">
+    <value>Body Fat</value>
+  </data>
+  <data name="ConversionFactor" xml:space="preserve">
+    <value>Conversion Factor</value>
+  </data>
+  <data name="DiseaseTreatment" xml:space="preserve">
+    <value>Disease Treatment</value>
+  </data>
+  <data name="Food" xml:space="preserve">
+    <value>Food</value>
+  </data>
+  <data name="HealthGoals" xml:space="preserve">
+    <value>Health Goals</value>
+  </data>
+  <data name="Height" xml:space="preserve">
+    <value>Height</value>
+  </data>
+  <data name="HeightUnits" xml:space="preserve">
+    <value>Height Units</value>
+  </data>
+  <data name="Ingredient" xml:space="preserve">
+    <value>Ingredient</value>
+  </data>
+  <data name="IngredientType" xml:space="preserve">
+    <value>Ingredient Type</value>
+  </data>
+  <data name="IngredientTypeUnit" xml:space="preserve">
+    <value>Ingredient Type Unit</value>
+  </data>
+  <data name="IngredientUsages" xml:space="preserve">
+    <value>Ingredient Usages</value>
+  </data>
+  <data name="IsPercent" xml:space="preserve">
+    <value>Is Percent</value>
+  </data>
+  <data name="LoseWeight" xml:space="preserve">
+    <value>Lose Weight</value>
+  </data>
+  <data name="MaintainTheHealth" xml:space="preserve">
+    <value>Maintain the Health</value>
+  </data>
+  <data name="MuscleGain" xml:space="preserve">
+    <value>Muscle Gain</value>
+  </data>
+  <data name="Other" xml:space="preserve">
+    <value>Other</value>
+  </data>
+  <data name="PregnancyNewMom" xml:space="preserve">
+    <value>Pregnancy/New Mom!</value>
+  </data>
+  <data name="PriceFactor" xml:space="preserve">
+    <value>Price Factor</value>
+  </data>
+  <data name="PriceOperator" xml:space="preserve">
+    <value>Price Operator</value>
+  </data>
+  <data name="ProfessionalAthlete" xml:space="preserve">
+    <value>Professional Athlete/Compete</value>
+  </data>
+  <data name="Recipe" xml:space="preserve">
+    <value>Recipe</value>
+  </data>
+  <data name="RecipeType" xml:space="preserve">
+    <value>Recipe Type</value>
+  </data>
+  <data name="RecipeTypes" xml:space="preserve">
+    <value>Recipe Types</value>
+  </data>
+  <data name="SizeUnits" xml:space="preserve">
+    <value>Size Units</value>
+  </data>
+  <data name="StressLevel" xml:space="preserve">
+    <value>Stress Level</value>
+  </data>
+  <data name="StressLevels" xml:space="preserve">
+    <value>Stress Levels</value>
+  </data>
+  <data name="Unit" xml:space="preserve">
+    <value>Unit</value>
+  </data>
+  <data name="Units" xml:space="preserve">
+    <value>Units</value>
+  </data>
+  <data name="WaistSize" xml:space="preserve">
+    <value>Waist Size</value>
+  </data>
+  <data name="Weight" xml:space="preserve">
+    <value>Weight</value>
+  </data>
+  <data name="WeightUnits" xml:space="preserve">
+    <value>Weight Units</value>
+  </data>
+  <data name="WorkoutPeriods" xml:space="preserve">
+    <value>Workout Periods</value>
+  </data>
+  <data name="WristSize" xml:space="preserve">
+    <value>Wrist Size</value>
+  </data>
+  <data name="Carbohydrate" xml:space="preserve">
+    <value>Carbohydrate</value>
+  </data>
+  <data name="Cholesterol" xml:space="preserve">
+    <value>Cholesterol</value>
+  </data>
+  <data name="DietaryFiber" xml:space="preserve">
+    <value>Dietary Fiber</value>
+  </data>
+  <data name="Energy" xml:space="preserve">
+    <value>Energy</value>
+  </data>
+  <data name="Iron" xml:space="preserve">
+    <value>Iron</value>
+  </data>
+  <data name="Protein" xml:space="preserve">
+    <value>Protein</value>
+  </data>
+  <data name="SaturatedFat" xml:space="preserve">
+    <value>Saturated Fat</value>
+  </data>
+  <data name="Sudium" xml:space="preserve">
+    <value>Sudium</value>
+  </data>
+  <data name="Sugars" xml:space="preserve">
+    <value>Sugars</value>
+  </data>
+  <data name="TotalLipid" xml:space="preserve">
+    <value>Total Lipid</value>
+  </data>
+  <data name="TransFat" xml:space="preserve">
+    <value>Trans Fat</value>
+  </data>
+  <data name="VitaminA" xml:space="preserve">
+    <value>Vitamin A</value>
+  </data>
+  <data name="VitaminC" xml:space="preserve">
+    <value>Vitamin C</value>
+  </data>
+  <data name="Zinc" xml:space="preserve">
+    <value>Zinc</value>
+  </data>
+  <data name="AllergyDescription" xml:space="preserve">
+    <value>Allergy Description</value>
+  </data>
+  <data name="AmountOfAlcohol" xml:space="preserve">
+    <value>Amount Of Alcohol</value>
+  </data>
+  <data name="AmountOfWater" xml:space="preserve">
+    <value>Amount Of Water</value>
+  </data>
+  <data name="CurrentStresses" xml:space="preserve">
+    <value>Current Stresses</value>
+  </data>
+  <data name="DislikeFoods" xml:space="preserve">
+    <value>Dislike Foods</value>
+  </data>
+  <data name="DrugsDescription" xml:space="preserve">
+    <value>Drugs Description</value>
+  </data>
+  <data name="FamilyPhysicianRecommendations" xml:space="preserve">
+    <value>Family Physician Recommendations</value>
+  </data>
+  <data name="FavoriteFoods" xml:space="preserve">
+    <value>Favorite Foods</value>
+  </data>
+  <data name="ForbiddenFoods" xml:space="preserve">
+    <value>Forbidden Foods</value>
+  </data>
+  <data name="HasAllergy" xml:space="preserve">
+    <value>Has Allergy</value>
+  </data>
+  <data name="HasChallengingJob" xml:space="preserve">
+    <value>Has Challenging Job</value>
+  </data>
+  <data name="HasPersonalTrainer" xml:space="preserve">
+    <value>Has Personal Trainer</value>
+  </data>
+  <data name="HealthProblems" xml:space="preserve">
+    <value>Health Problems</value>
+  </data>
+  <data name="HealthyDietKnowledge" xml:space="preserve">
+    <value>Healthy Diet Knowledge</value>
+  </data>
+  <data name="IsAthlete" xml:space="preserve">
+    <value>Is Athlete</value>
+  </data>
+  <data name="IsSmokeQuitted" xml:space="preserve">
+    <value>Is Smoke Quitted</value>
+  </data>
+  <data name="IsSmoker" xml:space="preserve">
+    <value>Is Smoker</value>
+  </data>
+  <data name="IsTreated" xml:space="preserve">
+    <value>Is Treated</value>
+  </data>
+  <data name="JobDescription" xml:space="preserve">
+    <value>Job Description</value>
+  </data>
+  <data name="LastLabTest" xml:space="preserve">
+    <value>Last Lab Test</value>
+  </data>
+  <data name="LikeCooking" xml:space="preserve">
+    <value>Like Cooking</value>
+  </data>
+  <data name="FoodPersonality" xml:space="preserve">
+    <value>Food Personality</value>
+  </data>
+  <data name="OtherDescription" xml:space="preserve">
+    <value>Other Description</value>
+  </data>
+  <data name="OtherWorkDayDescribe" xml:space="preserve">
+    <value>Other Work Day Describe</value>
+  </data>
+  <data name="PersonalTrainerDescription" xml:space="preserve">
+    <value>Personal Trainer Description</value>
+  </data>
+  <data name="PreviousDiets" xml:space="preserve">
+    <value>Previous Diets</value>
+  </data>
+  <data name="ProfessionalField" xml:space="preserve">
+    <value>Professional Field</value>
+  </data>
+  <data name="QuitDietReason" xml:space="preserve">
+    <value>Quit Diet Reason</value>
+  </data>
+  <data name="SedentaryHours" xml:space="preserve">
+    <value>Sedentary Hours</value>
+  </data>
+  <data name="ShoppingCosts" xml:space="preserve">
+    <value>Shopping Costs</value>
+  </data>
+  <data name="SleepTime" xml:space="preserve">
+    <value>Sleep Time</value>
+  </data>
+  <data name="SmokeDescription" xml:space="preserve">
+    <value>Smoke Description</value>
+  </data>
+  <data name="Supplements" xml:space="preserve">
+    <value>Supplements</value>
+  </data>
+  <data name="TakeSupplement" xml:space="preserve">
+    <value>Take Supplement</value>
+  </data>
+  <data name="WakeupTime" xml:space="preserve">
+    <value>Wakeup Time</value>
+  </data>
+  <data name="WeekendDescribe" xml:space="preserve">
+    <value>Weekend Describe</value>
+  </data>
+  <data name="WorkDayDescribe" xml:space="preserve">
+    <value>Work Day Describe</value>
+  </data>
+  <data name="WorkoutHours" xml:space="preserve">
+    <value>Workout Hours</value>
+  </data>
+  <data name="WorkoutPeriod" xml:space="preserve">
+    <value>Workout Period</value>
+  </data>
+  <data name="PreparingDuration" xml:space="preserve">
+    <value>Preparing Duration (minutes)</value>
+  </data>
+  <data name="Stringency" xml:space="preserve">
+    <value>Stringency</value>
+  </data>
+  <data name="OverheadCosts" xml:space="preserve">
+    <value>Overhead Costs</value>
+  </data>
+  <data name="PickupLocations" xml:space="preserve">
+    <value>Pickup Locations</value>
+  </data>
+  <data name="Diet" xml:space="preserve">
+    <value>Diet</value>
+  </data>
+  <data name="Diets" xml:space="preserve">
+    <value>Diets</value>
+  </data>
+  <data name="CookingDays" xml:space="preserve">
+    <value>Cooking Days</value>
+  </data>
+  <data name="NoAppleCider" xml:space="preserve">
+    <value>No Apple Cider</value>
+  </data>
+  <data name="NoPepper" xml:space="preserve">
+    <value>No Pepper Added</value>
+  </data>
+  <data name="NoSalt" xml:space="preserve">
+    <value>No Salt Added</value>
+  </data>
+</root>

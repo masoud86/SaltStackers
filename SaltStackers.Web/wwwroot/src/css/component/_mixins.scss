@@ -1,0 +1,130 @@
+@mixin left-right($left, $leftValue, $right, $rightValue) {
+    @if $direction=='ltr' {
+        #{$left}: #{$leftValue};
+    }
+    @else {
+        #{$right}: #{$rightValue};
+    }
+}
+
+@mixin border-radius($options) {
+    -moz-border-radius: $options;
+    -webkit-border-radius: $options;
+    border-radius: $options;
+}
+
+@mixin box-shadow($options...) {
+    -moz-box-shadow: $options;
+    -webkit-box-shadow: $options;
+    box-shadow: $options;
+}
+
+@mixin text-shadow($options...) {
+    text-shadow: $options;
+}
+
+@mixin box-sizing($options) {
+    -moz-box-sizing: $options;
+    -webkit-box-sizing: $options;
+    box-sizing: $options;
+}
+
+@mixin transform($options...) {
+    -moz-transform: $options;
+    -ms-transform: $options;
+    -o-transform: $options;
+    -webkit-transform: $options;
+    transform: $options;
+}
+
+@mixin transition($options...) {
+    -webkit-transition: $options;
+    -moz-transition: $options;
+    -o-transition: $options;
+    transition: $options;
+}
+
+@mixin transition-delay($options...) {
+    -moz-transition-delay: $options;
+    -o-transition-delay: $options;
+    -webkit-transition-delay: $options;
+    transition-delay: $options;
+}
+
+@mixin word-break($option) {
+    -ms-word-break: $option;
+    word-break: $option;
+}
+
+@mixin work-wrap($option) {
+    -ms-word-wrap: $option;
+    word-wrap: $option;
+}
+
+@mixin background-clip($option) {
+    -moz-background-clip: $option;
+    -webkit-background-clip: $option;
+    background-clip: $option;
+}
+
+@mixin font-feature-settings($option) {
+    -moz-font-feature-settings: $option;
+    -webkit-font-feature-settings: $option;
+    font-feature-settings: $option;
+}
+
+@mixin icon($option) {
+    content: $option;
+    font-family: "Font Awesome 5 Free";
+}
+
+@mixin input-error() {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%23F64E60' viewBox='0 0 12 12'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23F64E60' stroke='none'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: left calc(0.375em + 0.325rem) center;
+    background-size: calc(0.75em + 0.65rem) calc(0.75em + 0.65rem);
+}
+
+@mixin input-valid() {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3e%3cpath fill='%231BC5BD' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: left calc(0.375em + 0.325rem) center;
+    background-size: calc(0.75em + 0.65rem) calc(0.75em + 0.65rem);
+}
+
+@mixin placeholder() {
+    @if $direction=='rtl' {
+        ::-webkit-input-placeholder {
+            direction: rtl;
+            text-align: right;
+            color: $grey-400 !important;
+        }
+
+        :-moz-placeholder {
+            direction: rtl;
+            text-align: right;
+            color: $grey-400 !important;
+        }
+
+        ::-moz-placeholder {
+            direction: rtl;
+            text-align: right;
+            color: $grey-400 !important;
+        }
+
+        :-ms-input-placeholder {
+            direction: rtl;
+            text-align: right;
+            color: $grey-400 !important;
+        }
+    }
+}
+
+@mixin iteration($selector, $pseudo, $property, $min, $max, $prepend, $append) {
+    @for $i from $min through $max {
+
+        #{$selector}-#{$i} {
+            #{$property}: #{$prepend}#{$i}#{$append};
+        }
+    }
+}

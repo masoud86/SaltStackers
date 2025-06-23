@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "Nutrition";
+}
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4">
+    <div class="col mb-4" condition="@User.HasPermission("Nutrition|Food|Index")">
+        <card-link url="@Url.ActionLink("Index", "Food", new { Area = "Nutrition" })" title="Foods" icon="fas fa-fish" description="All foods"></card-link>
+    </div>
+    <div class="col mb-4" condition="@User.HasPermission("Nutrition|Recipe|Index")">
+        <card-link url="@Url.ActionLink("Index", "Recipe", new { Area = "Nutrition" })" title="Recipes" icon="fas fa-clipboard-list" description="All recipes"></card-link>
+    </div>
+    <div class="col mb-4" condition="@User.HasPermission("Nutrition|Ingredient|Index")">
+        <card-link url="@Url.ActionLink("Index", "Ingredient", new { Area = "Nutrition" })" title="Ingredients" icon="fas fa-carrot" description="All ingredients"></card-link>
+    </div>
+    <div class="col mb-4" condition="@User.HasPermission("Nutrition|Diet|Index")">
+        <card-link url="@Url.ActionLink("Index", "Diet", new { Area = "Nutrition" })" title="@Health.Diets" icon="fas fa-apple-alt" description="All diets"></card-link>
+    </div>
+    <div class="col mb-4" condition="@User.HasPermission("Nutrition|Tag|Index")">
+        <card-link url="@Url.ActionLink("Index", "Tag", new { Area = "Nutrition" })" title="Tags" icon="fas fa-tags" description="All tags"></card-link>
+    </div>
+    <div class="col mb-4" condition="@User.HasPermission("Nutrition|Package|Index")">
+        <card-link url="@Url.ActionLink("Index", "Package", new { Area = "Nutrition" })" title="Packages" icon="fas fa-box" description="Packages"></card-link>
+    </div>
+</div>

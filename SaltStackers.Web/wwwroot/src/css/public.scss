@@ -1,0 +1,13 @@
+﻿$direction: 'ltr';
+
+@import "./component/_variables";
+@import "./component/_mixins";
+@import "./component/_functions";
+@import "./component/_colors.scss";
+@import "./component/customer/_bootsrap-override";
+@import "./component/_fonts";
+@import "./component/_base";
+@import "./component/customer/_main";
+@import "./component/_scrollbar";
+@import "./component/customer/_unauthorize";
+@import "./component/_animate";

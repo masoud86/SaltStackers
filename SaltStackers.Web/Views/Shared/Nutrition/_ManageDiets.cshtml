@@ -1,0 +1,29 @@
+﻿<div class="modal fade" id="manage-diets-modal" ref="manageDietsModal" aria-hidden="true" aria-labelledby="manage-diets-label" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="manage-diets-label">Diets</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-hover table-striped align-middle">
+                    <thead>
+                        <tr>
+                            <th>Diet</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="diet in allDiets">
+                            <td><img class="me-1" v-bind:src="diet.iconUrl" width="40" alt="{{diet.title}}" />{{diet.title}}</td>
+                            <td>
+                                <button class="btn btn-link text-decoration-none link-danger" title="Delete" v-on:click.prevent="removeDietFromRecipe(diet)" v-if="isDietExists(diet)"><i class="@Icon.ButtonDelete fa-lg"></i></button>
+                                <button class="btn btn-link text-decoration-none link-primary" title="Add" v-on:click.prevent="addDietToRecipe(diet)" v-else><i class="@Icon.ButtonAdd fa-lg"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

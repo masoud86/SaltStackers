@@ -1,0 +1,95 @@
+﻿@model List<SaltStackers.Application.ViewModels.Log.UserActivityLogDto>
+
+<ul class="list-group index-list">
+    @if (Model.Any())
+    {
+        foreach (var item in Model)
+        {
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-md-10">
+                        <h6>
+                            <i class="fa-fw text-info @item.Type.GetResource(typeof(Icon), true)"></i>
+                            @item.FullName <small>(@item.Username)</small> -
+                            @item.Description
+                        </h6>
+                        <p class="mb-1 text-muted text-truncate">
+                            <strong>@item.CreateDateTime.ConvertFromUtcString()</strong>
+                            @Html.Raw(string.Format(Global.LogClientDetails, item.IpAddress, item.DeviceFull, item.BrowserFull))
+                        </p>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#exampleModal" data-id="@item.Id">
+                            @Global.ViewDetails
+                        </button>
+                    </div>
+                </div>
+            </li>
+        }
+    }
+    else
+    {
+        <partial name="_EmptyRow" />
+    }
+</ul>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row my-2">
+                    <div class="col-md-12 border-bottom">
+                        <div class="form-group row mb-0">
+                            <label for="log-owner" class="col-sm-3 col-form-label">User</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="log-owner" class="form-control-plaintext" readonly="readonly" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 border-bottom">
+                        <div class="form-group row mb-0">
+                            <label for="log-ip" class="col-sm-3 col-form-label">IP</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="log-ip" class="form-control-plaintext" readonly="readonly" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 border-bottom">
+                        <div class="form-group row mb-0">
+                            <label for="log-device" class="col-sm-3 col-form-label">Device</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="log-device" class="form-control-plaintext" readonly="readonly" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 border-bottom">
+                        <div class="form-group row mb-0">
+                            <label for="log-os" class="col-sm-3 col-form-label">OS</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="log-os" class="form-control-plaintext" readonly="readonly" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 border-bottom">
+                        <div class="form-group row mb-0">
+                            <label for="log-browser" class="col-sm-3 col-form-label">Browser</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="log-browser" class="form-control-plaintext" readonly="readonly" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 mt-3" id="log-description" style="direction: ltr; text-align: left">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">@Global.Close</button>
+            </div>
+        </div>
+    </div>
+</div>

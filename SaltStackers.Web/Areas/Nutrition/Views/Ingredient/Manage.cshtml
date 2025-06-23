@@ -1,0 +1,345 @@
+﻿@model SaltStackers.Application.ViewModels.Nutrition.IngredientDto
+@{
+    ViewData["Title"] = "Manage Ingredient";
+    ViewData["Icon"] = Icon.Nutrition;
+}
+
+<input type="hidden" asp-for="Id" ref="ingredientId" />
+<input type="hidden" asp-for="Title" ref="ingredientTitle" />
+<div class="card">
+    <div class="card-header border-bottom bg-light user-select-all">
+        @Model.Title
+    </div>
+    <div class="card-body">
+        <div class="row d-flex align-items-center">
+            <div class="col"><span class="text-muted me-1">Raw Unit:</span><span class="user-select-all">@Model.Unit.Sign</span></div>
+            <div class="col"><span class="text-muted me-1">Order Period:</span><span class="user-select-all">@Model.OrderPeriod</span></div>
+            <div class="col"><span class="text-muted me-1">Cooking Category:</span><span class="user-select-all">@Model.CookingCategory.Title</span></div>
+            <div class="col text-end">
+                <button class="btn btn-sm ms-1 btn-primary" v-on:click.prevent="openNewIngredientType()"><i class="fa-fw @Icon.ButtonAdd me-1"></i>Add Type</button>
+                <a asp-area="Nutrition" asp-controller="Ingredient" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-sm ms-1 btn-secondary"><i class="fa-fw @Icon.ButtonEdit me-1"></i>Edit</a>
+                <a asp-area="Nutrition" asp-controller="Ingredient" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-sm ms-1 btn-danger text-white"><i class="fa-fw @Icon.ButtonDelete me-1"></i>Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="accordion mt-3" id="ingredient-types">
+    <div class="accordion-item" v-for="ingredientType in ingredientTypes">
+        <h2 class="accordion-header" v-bind:id="'ingredient-type-' + ingredientType.id">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    v-bind:data-bs-target="'#ingredient-type-details-' + ingredientType.id"
+                    aria-expanded="false" v-bind:aria-controls="'ingredient-type-details-' + ingredientType.id">
+                {{ingredientType.displayTitle}}<small class="text-muted ps-1">(base price: {{ingredientType.basePrice.toFixed(4)}} CAD)</small>
+            </button>
+        </h2>
+        <div v-bind:id="'ingredient-type-details-' + ingredientType.id" class="accordion-collapse collapse" v-bind:aria-labelledby="'ingredient-type-' + ingredientType.id" data-bs-parent="#ingredient-types">
+            <div class="accordion-body pt-0">
+                <div class="alert alert-light d-flex rounded-0 rounded-bottom border-top-0 py-2">
+                    <button class="btn btn-sm me-1 btn-link text-decoration-none link-secondary" v-on:click.prevent="openEditIngredientType(ingredientType)"><i class="fa-fw @Icon.ButtonEdit me-1"></i>Edit Type</button>
+                    <button class="btn btn-sm btn-link text-decoration-none link-danger" v-on:click.prevent="deleteIngredientType(ingredientType.id)"><i class="fa-fw @Icon.ButtonDelete me-1"></i>Delete Type</button>
+                    <button class="btn btn-sm btn-primary ms-auto" v-on:click.prevent="openNewIngredientTypeUnit(ingredientType)"><i class="fa-fw @Icon.ButtonAdd me-1"></i>Add Unit</button>
+                </div>
+                <div class="list-group list-group-flush mt-3">
+                    <button class="list-group-item list-group-item-action" v-for="ingredientTypeUnit in ingredientType.ingredientTypeUnits" v-on:click.prevent="openEditIngredientTypeUnit(ingredientTypeUnit, ingredientType)">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">{{ingredientTypeUnit.unit.title}} ({{ingredientTypeUnit.unit.sign}})</h5>
+                            <h2 class="text-primary"><strong>{{calculatePrice(ingredientTypeUnit, ingredientType)}} <span class="small">CAD</span></strong></h2>
+                        </div>
+                        <p class="mb-0">
+                            {{formulaFormat(ingredientTypeUnit, ingredientType)}}
+                        </p>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="ingredient-type" ref="ingredientTypeModal" tabindex="-1" aria-labelledby="ingredient-type-label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ingredient-type-label">Ingredient Type</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="col mb-3">
+                    <label for="type-title">Title</label>
+                    <input type="text" id="type-title" v-if="ingredientType" v-model="ingredientType.title" class="form-control" v-on:input="updateDisplayTitle()" />
+                </div>
+                <div class="col mb-3">
+                    <label for="type-display-title">Display Title</label>
+                    <input type="text" id="type-display-title" v-if="ingredientType" v-model="ingredientType.displayTitle" class="form-control" />
+                </div>
+                <div class="col mb-3">
+                    <label for="type-base-price">Base Price (CAD)</label>
+                    <input type="text" id="type-base-price" v-if="ingredientType" v-model="basePriceFormat" class="form-control" />
+                </div>
+                <div class="col mb-3">
+                    <label for="mix-description">Mix Description</label>
+                    <input type="text" id="mix-description" v-if="ingredientType" v-model="ingredientType.mixDescription" class="form-control" />
+                </div>
+                <div class="col mb-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" aria-describedby="needsPrep-help" id="needsPrep" v-if="ingredientType" v-model="ingredientType.needsPrep" />
+                        <label class="form-check-label" for="needsPrep">Needs Prep</label>
+                    </div>
+                    <div id="needsPrep-help" class="form-text">Check this box if the ingredient needs prep (show in the prep report).</div>
+                </div>
+                <div class="col mb-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" aria-describedby="pchef-help" id="pchef" v-if="ingredientType" v-model="ingredientType.pchef" />
+                        <label class="form-check-label" for="pchef">P-Chef</label>
+                    </div>
+                    <div id="pchef-help" class="form-text">Check this box if the ingredient must be prepared by a personal chef.</div>
+                </div>
+                <div class="col mb-3" v-if="ingredientType">
+                    <h5>Allergen Alerts</h5>
+                    <div class="row row-cols-3">
+                        @foreach (var item in EnumHelper<AllergenAlert>.GetValues())
+                        {
+                            <div class="col">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="@item" value="@((int)item)" v-model="ingredientType.allergens" />
+                                    <label class="form-check-label" for="@item">@(EnumHelper<AllergenAlert>.GetDisplayValue(item))</label>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <table class="table table-hover table-striped align-middle" v-if="ingredientType && ingredientType.id">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th><button class="btn btn-sm btn-primary" v-on:click.prevent="openIngredientTypeSubCategory(ingredientType)">Add</button></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="item in ingredientType.ingredientTypeSubCategories">
+                            <td>{{item.ingredientSubCategory.ingredientCategory.title}}/{{item.ingredientSubCategory.title}}</td>
+                            <td><button class="btn btn-sm btn-link text-decoration-none link-danger" v-on:click.prevent="removeIngredientTypeSubCategory(item.id)">Remove</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button v-if="ingredientType && ingredientType.id" type="button" class="btn btn-primary" v-on:click.prevent.stop="editType()" v-bind:disabled="!ingredientType || !ingredientType.title">Edit Type</button>
+                <button v-else type="button" class="btn btn-primary" v-on:click.prevent.stop="addNewType()" v-bind:disabled="!ingredientType || !ingredientType.title">Add New Type</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="add-ingredient-type-category" ref="addIngredientTypeCategoryModal" tabindex="-1" aria-labelledby="add-ingredient-type-category-label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="add-ingredient-type-category-label">Ingredient Category</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-floating col mb-3">
+                    <select id="ingredient-categories" class="form-select" v-model="ingredientCategory" v-on:change="changeCategory()">
+                        <option v-for="option in ingredientCategories" :value="option">
+                            {{ option.title }}
+                        </option>
+                    </select>
+                    <label for="ingredient-categories">Categories</label>
+                </div>
+                <div class="form-floating col mb-3">
+                    <select id="ingredient-sub-categories" class="form-select" v-model="ingredientSubCategory">
+                        <option v-for="option in ingredientSubCategories" :value="option">
+                            {{ option.title }}
+                        </option>
+                    </select>
+                    <label for="ingredient-sub-categories">SubCategories</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" v-on:click.prevent.stop="addNewCategory()" v-bind:disabled="!ingredientCategory || !ingredientSubCategory">Add Category</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="ingredient-type-unit" ref="ingredientTypeUnitModal" tabindex="-1" aria-labelledby="ingredient-type-unit-label" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ingredient-type-unit-label" v-if="ingredientType">{{ingredientType.title}}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" v-if="ingredientTypeUnit">
+                <div class="row mb-3">
+                    <div class="form-floating col-md-6 mb-3 mb-sm-0">
+                        <select id="unit-id" class="form-select" v-model="ingredientTypeUnit.unitId" v-on:change="changeUnit()">
+                            <optgroup v-for="(options, group) in unitsGroup" :key="group" :label="group">
+                                <option v-for="option in options" :value="option.id">
+                                    {{ option.title }}
+                                </option>
+                            </optgroup>
+                        </select>
+                        <label for="unit-id">Unit</label>
+                    </div>
+                    <div class="form-floating col-md-6 mb-3 mb-sm-0" v-show="ingredientTypeUnit.unit && ingredientTypeUnit.unit.hasCustomConversionFactor">
+                        <input id="conversion-factor" class="form-control" placeholder="Conversion Factor"
+                               v-model="ingredientTypeUnit.conversionFactor" />
+                        <label for="conversion-factor">Conversion Factor</label>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <p class="mb-1">The rate of change in weight compared to the original form of the raw material.</p>
+                    <div class="form-floating col-2">
+                        <select id="amount-operator" class="form-select" v-model="ingredientTypeUnit.amountOperator">
+                            <option value="+">+</option>
+                            <option value="-">-</option>
+                        </select>
+                        <label for="amount-operator">Sign</label>
+                    </div>
+                    <div class="input-group col">
+                        <div class="form-floating flex-grow-1">
+                            <input id="amount-factor" class="form-control rounded-0 rounded-start" placeholder="Rate" v-model="ingredientTypeUnit.amountFactor" aria-describedby="amount-factor-percent" />
+                            <label for="amount-factor">Rate</label>
+                        </div>
+                        <span class="input-group-text" id="amount-factor-percent">%</span>
+                    </div>
+                    <div class="col-6"></div>
+                </div>
+                <div class="alert alert-secondary pb-0 mt-4">
+                    <h3>Pricing</h3>
+                    <div class="row mb-3 calculator">
+                        <div class="form-floating col-2">
+                            <input id="base-price" class="form-control" placeholder="Base Price" readonly disabled v-bind:value="ingredientType.basePrice.toFixed(2)" />
+                            <label for="base-price">Base Price</label>
+                        </div>
+                        <div class="form-floating col-2">
+                            <select id="price-operator" class="form-select calculate-input" v-model="ingredientTypeUnit.priceOperator">
+                                <option value="+">+</option>
+                                <option value="x">x</option>
+                                <option value="-">-</option>
+                                <option value="/">/</option>
+                            </select>
+                            <label for="price-operator">Operator</label>
+                        </div>
+                        <div class="form-floating col-3">
+                            <input id="price-factor" class="form-control calculate-input" placeholder="Factor" v-model="ingredientTypeUnit.priceFactor" />
+                            <label for="price-factor">Factor</label>
+                        </div>
+                        <div class="col d-flex align-items-center">
+                            <div class="form-check mb-0">
+                                <input class="form-check-input calculate-input" type="checkbox" id="is-percent" v-model="ingredientTypeUnit.isPercent">
+                                <label class="form-check-label" for="is-percent">
+                                    %
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col d-flex align-items-center">
+                            <p class="h3 m-0">=</p>
+                        </div>
+                        <div class="col-3 d-flex align-items-center">
+                            <p class="h3 m-0 total">{{ingredientTypeUnitTotal}} <span class="small text-muted">CAD</span></p>
+                        </div>
+                    </div>
+                </div>
+                <fieldset>
+                    <hr />
+                    <h3>Make Your Own</h3>
+                    <div class="row mb-3">
+                        <div class="col-md-3 mb-3 mb-sm-0 d-flex align-items-center">
+                            <div class="form-check mb-0">
+                                <input class="form-check-input" type="checkbox" id="make-your-own" v-model="ingredientTypeUnit.makeYourOwn">
+                                <label class="form-check-label" for="make-your-own">
+                                    Enable
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-floating col-md-4 mb-3 mb-sm-0">
+                            <input id="profit-margin" class="form-control" placeholder="Profit Margin" v-model="ingredientTypeUnit.profitMargin" />
+                            <label for="profit-margin">Profit Margin ($)</label>
+                        </div>
+                        <div class="form-floating col-md-4 mb-3 mb-sm-0">
+                            <input id="amounts" class="form-control" placeholder="Amounts" v-model="ingredientTypeUnit.amounts" />
+                            <label for="amounts">Amounts (Comma Separated: 1,2,3)</label>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <hr />
+                    <h3>Nutrition Facts</h3>
+                    <div class="row mb-3">
+                        <div class="form-floating col-md-3 mb-3 mb-sm-0">
+                            <input id="energy" class="form-control" placeholder="Energy" v-model="ingredientTypeUnit.energy" />
+                            <label for="energy">Energy</label>
+                        </div>
+                        <div class="form-floating col-md-3 mb-3 mb-sm-0">
+                            <input id="protein" class="form-control" placeholder="Protein" v-model="ingredientTypeUnit.protein" />
+                            <label for="protein">Protein</label>
+                        </div>
+                        <div class="form-floating col-md-3 mb-3 mb-sm-0">
+                            <input id="total-fat" class="form-control" placeholder="Total Fat" v-model="ingredientTypeUnit.totalFat" />
+                            <label for="total-fat">Total Fat</label>
+                        </div>
+                        <div class="form-floating col-md-3 mb-3 mb-sm-0">
+                            <input id="trans-fat" class="form-control" placeholder="TransFat" v-model="ingredientTypeUnit.transFat" />
+                            <label for="trans-fat">Trans Fat</label>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="form-floating col-md-3 mb-3 mb-sm-0">
+                            <input id="saturated-fat" class="form-control" placeholder="SaturatedFat" v-model="ingredientTypeUnit.saturatedFat" />
+                            <label for="saturated-fat">Saturated Fat</label>
+                        </div>
+                        <div class="form-floating col-md-3 mb-3 mb-sm-0">
+                            <input id="cholesterol" class="form-control" placeholder="Cholesterol" v-model="ingredientTypeUnit.cholesterol" />
+                            <label for="cholesterol">Cholesterol</label>
+                        </div>
+                        <div class="form-floating col-md-3 mb-3 mb-sm-0">
+                            <input id="carbohydrate" class="form-control" placeholder="Carbohydrate" v-model="ingredientTypeUnit.carbohydrate" />
+                            <label for="carbohydrate">Carbohydrate</label>
+                        </div>
+                        <div class="form-floating col-md-3 mb-3 mb-sm-0">
+                            <input id="dietary-fiber" class="form-control" placeholder="DietaryFiber" v-model="ingredientTypeUnit.dietaryFiber" />
+                            <label for="dietary-fiber">Dietary Fiber</label>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="form-floating col-md-3 mb-3 mb-sm-0">
+                            <input id="sugars" class="form-control" placeholder="Sugars" v-model="ingredientTypeUnit.sugars" />
+                            <label for="sugars">Sugars</label>
+                        </div>
+                        <div class="form-floating col-md-3 mb-3 mb-sm-0">
+                            <input id="sudium" class="form-control" placeholder="Sudium" v-model="ingredientTypeUnit.sudium" />
+                            <label for="sudium">Sudium</label>
+                        </div>
+                        <div class="form-floating col-md-3 mb-3 mb-sm-0">
+                            <input id="iron" class="form-control" placeholder="Iron" v-model="ingredientTypeUnit.iron" />
+                            <label for="iron">Iron</label>
+                        </div>
+                        <div class="form-floating col-md-3 mb-3 mb-sm-0">
+                            <input id="vitamin-a" class="form-control" placeholder="VitaminA" v-model="ingredientTypeUnit.vitaminA" />
+                            <label for="vitamin-a">Vitamin A</label>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="form-floating col-md-3 mb-3 mb-sm-0">
+                            <input id="vitamin-c" class="form-control" placeholder="VitaminC" v-model="ingredientTypeUnit.vitaminC" />
+                            <label for="vitamin-c">Vitamin C</label>
+                        </div>
+                        <div class="form-floating col-md-3 mb-3 mb-sm-0">
+                            <input id="zinc" class="form-control" placeholder="Zinc" v-model="ingredientTypeUnit.zinc" />
+                            <label for="zinc">Zinc</label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button v-if="ingredientTypeUnit && ingredientTypeUnit.id" type="button" class="btn btn-danger text-white" v-on:click.prevent.stop="deleteIngredientTypeUnit(ingredientTypeUnit.id)" v-bind:disabled="!ingredientTypeUnit || loading.ingredientTypeUnit">Delete Unit</button>
+                <button v-if="ingredientTypeUnit && ingredientTypeUnit.id" type="button" class="btn btn-primary" v-on:click.prevent.stop="editTypeUnit()" v-bind:disabled="!ingredientTypeUnit || !ingredientTypeUnit.unit || loading.ingredientTypeUnit">Edit Unit</button>
+                <button v-else type="button" class="btn btn-primary" v-on:click.prevent.stop="addNewTypeUnit()" v-bind:disabled="!ingredientTypeUnit || !ingredientTypeUnit.unitId || loading.ingredientTypeUnit">Add New Unit</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts {
+    <script src="~/dist/js/page/nutrition/ingredient-manage.js"></script>
+}

@@ -1,0 +1,18 @@
+﻿@model SaltStackers.Application.ViewModels.Nutrition.IngredientDto
+@{
+    ViewData["Title"] = string.Format(Global.EditItem, Global.Ingredient);
+    ViewData["Icon"] = Icon.Nutrition;
+}
+<div class="row">
+    <div class="col-12 col-md-6">
+        <div asp-validation-summary="All" class="alert alert-danger"></div>
+        <form asp-area="Nutrition" asp-controller="Ingredient" asp-action="Edit" asp-route-id="@Model.Id" method="post">
+            <partial name="_IngredientForm" />
+            <div class="col-md-12">
+                <button type="submit" class="btn btn-primary">@string.Format(Global.EditItem, Global.Ingredient)</button>
+                <a asp-area="Nutrition" asp-controller="Ingredient" asp-action="Index" class="btn btn-outline-secondary">@Global.Cancel</a>
+            </div>
+        </form>
+    </div>
+    <div class="col-12 col-md-6"></div>
+</div>

@@ -1,0 +1,43 @@
+* {
+    font-family: roboto;
+}
+
+body {
+    font-family: roboto;
+    font-size: fontSize(0);
+}
+
+a, a:hover, a:focus, a:active {
+    text-decoration: none;
+    outline: none;
+}
+
+h1, .h1 {
+    font-size: fontSize(8);
+}
+
+h2, .h2 {
+    font-size: fontSize(6);
+}
+
+h3, .h3 {
+    font-size: fontSize(5);
+}
+
+h4, .h4 {
+    font-size: fontSize(4);
+}
+
+h5, .h5 {
+    font-size: fontSize(3);
+}
+
+h6, .h6 {
+    font-size: fontSize(2);
+}
+
+[v-cloak] {
+    display: none;
+}
+
+@include placeholder();

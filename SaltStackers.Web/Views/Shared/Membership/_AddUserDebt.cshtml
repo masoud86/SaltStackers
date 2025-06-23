@@ -1,0 +1,26 @@
+﻿<div class="modal fade" id="add-user-debt-modal" ref="addUserDebtModal" aria-hidden="true" aria-labelledby="add-user-debt-label" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="add-user-debt-label">Add New Debt</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <label for="debt-title" class="form-label">Title</label>
+                        <input type="text" id="debt-title" class="form-control" v-model="debt.title" />
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <label for="debt-amount" class="form-label">Amount</label>
+                        <input type="text" id="debt-amount" class="form-control" v-model="debt.amount" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary" v-on:click.prevent="addNewUserDebt()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

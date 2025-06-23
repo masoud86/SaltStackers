@@ -1,0 +1,16 @@
+﻿@model SaltStackers.Application.ViewModels.Nutrition.DeleteRecipeIngredientTypeUnit
+@{
+    ViewData["Title"] = string.Format(Global.DeleteItem, Global.RecipeIngredientTypeUnit);
+    ViewData["Icon"] = Icon.Ingredient;
+}
+
+<div asp-validation-summary="All" class="alert alert-danger"></div>
+<form asp-area="Nutrition" asp-controller="RecipeIngredientTypeUnit" asp-action="Delete" asp-route-id="@Model.Id" asp-route-recipeId="@Model.RecipeId" method="post">
+    <p>@(Html.Raw(string.Format(Global.DeleteConfirm, Global.RecipeIngredientTypeUnit, Model.Title)))</p>
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <button type="submit" class="btn btn-sm btn-danger">@string.Format(Global.DeleteItem, Global.RecipeIngredientTypeUnit)</button>
+            <a asp-area="Nutrition" asp-controller="RecipeIngredientTypeUnit" asp-action="Index" asp-route-recipeId="@Model.RecipeId" class="btn btn-sm btn-outline-secondary">@Global.Cancel</a>
+        </div>
+    </div>
+</form>

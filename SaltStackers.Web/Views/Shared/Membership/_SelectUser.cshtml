@@ -1,0 +1,40 @@
+﻿<div class="modal fade" id="select-customer-modal" ref="selectCustomerModal" tabindex="-1" aria-labelledby="select-customer-label" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="select-customer-label">Select Customer</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-floating col-md-12 mb-3 mb-sm-0">
+                    <input id="customer-query" v-model="customerQuery" class="form-control" placeholder="Search ..." v-on:input="searchUsers()" />
+                    <label for="customer-query">Search ...</label>
+                </div>
+                <table class="table table-hover table-striped align-middle">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone Number</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="customer in customers">
+                            <td>{{customer.name}}</td>
+                            <td>{{customer.email}}</td>
+                            <td>{{customer.phoneNumber}}</td>
+                            <td><button class="btn btn-sm btn-primary" v-on:click.prevent="selectCustomer(customer)">Select</button></td>
+                        </tr>
+                        <tr v-if="customers.length === 0">
+                            <td colspan="4">There is no item</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>

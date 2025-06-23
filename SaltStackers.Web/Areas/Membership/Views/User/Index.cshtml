@@ -1,0 +1,66 @@
+﻿@model SaltStackers.Application.ViewModels.Membership.Users
+@{
+    ViewData["Title"] = Security.Users;
+    ViewData["Icon"] = Icon.User;
+    Model.PageUrl = Url.Action("Index");
+}
+@section actions {
+    <a href="#collapse-filters" class="mx-1" data-bs-toggle="collapse" aria-expanded="false"><i class="fas fa-fw fa-filter"></i></a>
+}
+@section mainAction {
+    <a asp-area="Membership" asp-controller="User" asp-action="Create" class="btn btn-sm btn-primary">@string.Format(Global.AddNew, Security.User)</a>
+}
+<partial name="_Filters" />
+<div class="table-responsive">
+    <table class="table table-hover table-striped align-middle">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Contact</th>
+                <th>Created at</th>
+                <th>Last Login</th>
+                <th>Attributes</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Items.Any())
+            {
+                foreach (var item in Model.Items)
+                {
+                    <tr>
+                        <td>
+                            <a asp-area="Membership" asp-controller="User" asp-action="Profile" asp-route-id="@item.Id"><strong class="d-block">@item.Name</strong></a>
+                            <span class="text-muted small">@item.Username</span>
+                        </td>
+                        <td>
+                            @item.Email<br />
+                            @item.PhoneNumber
+                        </td>
+                        <td><span title="@item.CreateDateTimeLocal">@item.CreateDateTimeHumanized</span></td>
+                        <td><span title="@item.LastLoginLocal">@item.LastLoginHumanized</span></td>
+                        <td>
+                            @if (item.RoleModel != null)
+                            {
+                                <i class="fa-fw @item.RoleModel.Icon text-secondary" title="@item.RoleModel.DisplayName"></i>
+                            }
+                            <i condition="!string.IsNullOrEmpty(item.StripeId)" class="fab fa-fw fa-lg fa-stripe text-success" title="Registered in Stripe: @item.StripeId"></i>
+                            <i condition="item.PhoneNumberConfirmed" class="fas fa-fw fa-mobile-alt text-success" title="Phone Number Confirmed"></i>
+                            <i condition="item.EmailConfirmed" class="fas fa-fw fa-envelope text-success" title="Email Confirmed"></i>
+                        </td>
+                        <td>
+                            <a condition="item.IsAdmin" asp-area="Membership" asp-controller="User" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-link text-decoration-none link-primary"><i class="me-1 fa-fw @Icon.ButtonEdit"></i>@Global.Edit</a>
+                            <a condition="!item.IsAdmin" asp-area="Membership" asp-controller="Customer" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-link text-decoration-none link-primary"><i class="me-1 fa-fw @Icon.ButtonEdit"></i>@Global.Edit</a>
+                            <a condition="item.IsBlocked && item.Id != User.Id()" asp-area="Membership" asp-controller="User" asp-action="Unblock" asp-route-id="@item.Id" class="btn btn-sm btn-link text-decoration-none link-warning"><i class="me-1 fa-fw @Icon.ButtonUnblock"></i>@Security.Unblock</a>
+                            <a condition="!item.IsBlocked && item.Id != User.Id()" asp-area="Membership" asp-controller="User" asp-action="Block" asp-route-id="@item.Id" class="btn btn-sm btn-link text-decoration-none link-danger"><i class="me-1 fa-fw @Icon.ButtonBlock"></i>@Security.Block</a>
+                            <a condition="item.Id != User.Id()" asp-area="Membership" asp-controller="User" asp-action="ResetPassword" asp-route-id="@item.Id" class="btn btn-sm btn-link text-decoration-none link-secondary"><i class="me-1 fa-fw @Icon.ChangePassword"></i>@Security.ResetPassword</a>
+                            <a asp-area="Membership" asp-controller="Customer" asp-action="CreateAddress" asp-route-userId="@item.Id" class="btn btn-sm btn-link text-decoration-none link-secondary"><i class="me-1 fa-fw fas fa-map"></i>Add Address</a>
+                            <a asp-area="Financial" asp-controller="Wallet" asp-action="Index" asp-route-userId="@item.Id" class="btn btn-sm btn-link text-decoration-none link-secondary"><i class="me-1 fa-fw fas fa-wallet"></i>Wallet</a>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+<partial name="_PagingInfo" model="Model" />

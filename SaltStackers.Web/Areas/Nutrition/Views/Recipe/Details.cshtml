@@ -1,0 +1,247 @@
+﻿@model SaltStackers.Application.ViewModels.Nutrition.RecipeDetails
+@{
+    ViewData["Title"] = Model.Title;
+}
+<input type="hidden" id="food-id" value="@Model.FoodId" ref="foodId" />
+<input type="hidden" id="recipe-id" value="@Model.RecipeId" ref="recipeId" />
+<div class="row mb-4" v-if="recipe">
+    <div class="col-9">
+        <div class="row">
+            <div class="col-12 d-flex justify-content-start align-items-center">
+                <img condition="Model.Images.FirstOrDefault() != null" src="~/Uploads/Food/@Model.FoodId/@Model.Images.FirstOrDefault()" class="img-thumbnail me-2" width="100" alt="@Model.Title">
+                <img condition="Model.Images.FirstOrDefault() == null" src="~/Uploads/Food/default-small.png" class="img-thumbnail me-2" width="100" alt="@Model.Title">
+                <div>
+                    <h1 class=""><span class="user-select-all">@ViewData["Title"]</span> _ <small class="text-black-50 user-select-all">{{recipe.code}}</small><span v-if="recipe && recipe.personalChef" class="ms-1 badge bg-warning">by {{recipe.personalChef.name}}</span></h1>
+                    <p class="mb-1">
+                        <span class="badge me-1 bg-secondary text-white" title="Type">{{recipe.recipeTypeTitle}}</span>
+                        <span class="badge me-1 bg-secondary text-white" title="Skill Level">{{recipe.skillTitle}}</span>
+                        <span class="badge me-1 bg-secondary text-white" title="Packaging Time">{{recipe.packagingTime}} min</span>
+                        <span v-if="recipe.recipeSize == 1" class="badge me-1 bg-secondary-subtle text-dark" title="Size">{{recipe.recipeSizeTitle}}</span>
+                        <span v-else class="badge me-1 bg-warning text-white" title="Size">{{recipe.recipeSizeTitle}}</span>
+                    </p>
+                    <span v-if="recipe.mainMenu" class="badge me-1 bg-primary text-white">Main Menu</span>
+                    <span v-if="recipe.defaultInCategory" class="badge me-1 bg-secondary-subtle text-dark">Default in Category</span>
+                    <span v-if="recipe.isRoutine" class="badge me-1 bg-info-subtle text-dark">Routine</span>
+                    <span v-if="recipe.isOption" class="badge me-1 bg-warning-subtle text-dark">Option</span>
+                    <span v-if="recipe.isNew" class="badge me-1 bg-danger-subtle text-dark">New</span>
+                    <span v-if="recipe.isTwoStepCooking" class="badge me-1 bg-danger-subtle text-dark">Two-Step Cooking</span>
+                    <span v-if="recipe.isActive" class="badge me-1 bg-success-subtle text-dark">Active</span>
+                    <span v-if="!recipe.isActive" class="badge me-1 bg-danger text-white">Deactivate</span>
+                    <span v-if="users.length > 0" class="badge me-1 text-bg-light position-relative" v-on:click.prevent="openOwnersModal()">
+                        <i class="fas fa-fw fa-user"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            {{users.length}}
+                            <span class="visually-hidden">Recipe Owners</span>
+                        </span>
+                    </span>
+                    <span v-if="recipe.priority" class="badge me-1 bg-danger text-white" title="Priority">{{recipe.priority}}</span>
+                </div>
+            </div>
+            <div class="col-12 mt-2">
+                <span class="pe-2 lh-lg">Remarks:</span>
+                <span v-if="recipe.allowNoSalt" class="badge me-1 text-dark fw-normal bg-warning-subtle">No Salt</span>
+                <span v-if="recipe.allowNoPepper" class="badge me-1 text-dark fw-normal bg-warning-subtle">No Pepper</span>
+                <span v-if="recipe.allowNoAppleCider" class="badge me-1 text-dark fw-normal bg-warning-subtle">No Apple Cider</span>
+                <span v-if="recipe.allowNoSalmonSkin" class="badge me-1 text-dark fw-normal bg-warning-subtle">No Salmon Skin</span>
+            </div>
+            <div class="col-12 mt-1" v-if="allergenAllerts.length > 0">
+                <span class="pe-2 lh-lg">Allergen Alerts:</span>
+                <span v-for="allergenAllert in allergenAllerts" class="badge me-1 text-dark fw-normal bg-danger-subtle">{{allergenAllert}}</span>
+            </div>
+            <div class="col-12 mt-1">
+                <span class="pe-2 lh-lg">Tags:</span>
+                <span v-for="tag in tags" class="badge me-1 text-dark fw-normal bg-success-subtle">{{tag.title}}</span>
+            </div>
+            <div class="col-12 mt-1">
+                <span class="pe-2 lh-lg">Category:</span>
+                <span v-for="diet in diets" class="badge me-1 fw-normal" :class="{'bg-primary text-white': diet.isActive, 'bg-primary-subtle text-dark': !diet.isActive}">{{diet.title}}</span>
+            </div>
+            <div class="col-12 mt-2">
+                <div class="alert alert-success" role="alert">
+                    <div class="row">
+                        <div class="col d-flex align-items-center">
+                            <h4 class="mb-0">
+                                <i class="fas fa-fw me-1 fa-coins"></i> Total Price: <span class="user-select-all" v-if="recipe">${{recipe.price}}</span>
+                            </h4>
+                        </div>
+                        <div class="col d-flex align-items-center">
+                            <div class="input-group">
+                                <input type="text" class="form-control form-control-sm" aria-label="Calculate Time" aria-describedby="update-price" :value="'Calculated at: ' + recipe.calculateDateTimeLocal" disabled readonly />
+                                <button class="btn btn-outline-success" type="button" id="update-price" v-on:click.prevent="updateRecipeVariables()">Update Now</button>
+                            </div>
+                            <button type="button" class="btn btn-info ms-2" v-on:click.prevent="openPriceChartModal()" title="Price Structure"><i class="fas fa-fw fa-chart-pie"></i></button>
+                            <button type="button" class="btn btn-success ms-2" v-on:click.prevent="syncAll()" title="Sync"><i class="fas fa-fw fa-arrows-rotate"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped align-middle">
+                        <tbody>
+                            <tr>
+                                <th>Order</th>
+                                <th>Item</th>
+                                <th>Amount</th>
+                                <th>Total <span class="small">(CAD)</span></th>
+                                <th class="d-print-none"></th>
+                            </tr>
+                            <tr v-for="ingredient in allIngredients" v-bind:class="{ 'table-warning text-muted': ingredient.isAddOn }">
+                                <td><button class="btn btn-sm btn-link" v-on:click.prevent="openIngredientOrder(ingredient)">{{ingredient.order}}</button></td>
+                                <td>
+                                    <i class="fa-fw fas fa-plus-square me-1 text-warning" title="Add-On" v-if="ingredient.isAddOn"></i>
+                                    <i class="fa-fw fas fa-bottle-droplet me-1 text-success" title="Dressing" v-if="ingredient.isDressing"></i>
+                                    <strong>{{ingredient.title}}<a class="ms-1" :href="'/Nutrition/Ingredient/Manage/' + ingredient.ingredientId"><i class="fas fa-link"></i></a></strong>
+                                    <span v-for="sub in ingredient.substitutes" class="d-block text-muted small">
+                                        <i class="fa-fw fas fa-exchange-alt me-1"></i>{{sub.title}} <span title="Process Fee">({{sub.processFee.toFixed(2)}} CAD)</span>
+                                        <a class="ms-1" :href="'/Nutrition/Ingredient/Manage/' + sub.ingredientId"><i class="fas fa-link"></i></a>
+                                    </span>
+                                </td>
+                                <td>
+                                    <template v-for="amount in ingredient.amounts">
+                                        <strong v-if="amount.isDefault" class="d-block">{{amount.amount}} {{amount.unit}}</strong>
+                                        <small v-else class="d-block text-muted">{{amount.amount}} {{amount.unit}} ({{amount.processFee.toFixed(2)}} CAD)</small>
+                                    </template>
+                                </td>
+                                <td>{{ingredient.price}}</td>
+                                <td class="d-print-none">
+                                    <button class="btn btn-sm btn-link text-decoration-none link-secondary" title="Amounts" v-on:click.prevent="openAmountsModal(ingredient)"><i class="fas fa-fw fa-lg fa-weight"></i></button>
+                                    <button class="btn btn-sm btn-link text-decoration-none link-secondary" title="Substitutes" v-on:click.prevent="openSubstitutesModal(ingredient)"><i class="fas fa-fw fa-lg fa-exchange-alt"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" class="text-end"><strong>Subtotal</strong></td>
+                                <td colspan="2"><strong>{{subtotal.toFixed(2)}}</strong></td>
+                            </tr>
+                            <tr v-for="overhead in overheads">
+                                <td colspan="3" class="text-end">{{overhead.overheadCostTitle}}</td>
+                                <td colspan="2">{{overhead.amount.toFixed(2)}}</td>
+                            </tr>
+                            <tr v-if="recipe">
+                                <td colspan="3" class="text-end">Gross Margin ({{recipe.food.profitMargin}}%)</td>
+                                <td colspan="2">{{profitMargin.toFixed(2)}}</td>
+                            </tr>
+                            <tr class="table-success">
+                                <td colspan="3" class="text-end"><strong>Total</strong></td>
+                                <td colspan="2"><strong class="user-select-all" v-if="recipe">{{totalPrice.toFixed(2)}} CAD</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-3">
+        <div class="list-group d-print-none mb-3">
+            <a class="list-group-item list-group-item-action" asp-area="Nutrition" asp-controller="Recipe" asp-action="Index" asp-route-foodId="@Model.FoodId"><i class="me-1 fa-fw fas fa-chevron-left"></i>Back</a>
+            <a class="list-group-item list-group-item-action" asp-area="Nutrition" asp-controller="Food" asp-action="Edit" asp-route-id="@Model.FoodId"><i class="me-1 fa-fw @Icon.ButtonEdit"></i>Edit Food</a>
+            <a class="list-group-item list-group-item-action" asp-area="Nutrition" asp-controller="Recipe" asp-action="Index" asp-route-foodId="@Model.FoodId"><i class="me-1 fa-fw fas fa-utensils"></i>Food Recipes</a>
+            <a class="list-group-item list-group-item-action" asp-area="Nutrition" asp-controller="Recipe" asp-action="Edit" asp-route-id="@Model.RecipeId"><i class="me-1 fa-fw @Icon.ButtonEdit"></i>Edit Recipe</a>
+            <a class="list-group-item list-group-item-action" asp-area="Nutrition" asp-controller="RecipeIngredientTypeUnit" asp-action="Index" asp-route-recipeId="@Model.RecipeId"><i class="me-1 fa-fw @Icon.Ingredient"></i>Ingredients</a>
+            <a class="list-group-item list-group-item-action" asp-area="Nutrition" asp-controller="RecipeOverheadCost" asp-action="Index" asp-route-recipeId="@Model.RecipeId"><i class="me-1 fa-fw @Icon.OverheadCost"></i>Overhead Costs</a>
+            <a class="list-group-item list-group-item-action" asp-area="Nutrition" asp-controller="Recipe" asp-action="Clone" asp-route-id="@Model.RecipeId"><i class="me-1 fa-fw @Icon.ButtonClone"></i>Clone</a>
+        </div>
+        <div class="list-group d-print-none">
+            <button class="list-group-item list-group-item-action" v-on:click.prevent="openTransferModal()"><i class="fas fa-fw fa-random me-1"></i>Transfer</button>
+            <button class="list-group-item list-group-item-action" v-on:click.prevent="openOwnersModal()"><i class="fas fa-fw fa-user me-1"></i>Owners <span class="badge bg-danger text-white">{{users ? users.length : 0}}</span></button>
+            <button class="list-group-item list-group-item-action" v-on:click.prevent="openDietsModal()"><i class="fas fa-fw fa-sitemap me-1"></i>Categories</button>
+            <button class="list-group-item list-group-item-action" v-on:click.prevent="openTagsModal()"><i class="fas fa-fw fa-tags me-1"></i>Tags</button>
+            <button class="list-group-item list-group-item-action" data-bs-toggle="modal" data-bs-target="#remarks-modal"><i class="fas fa-fw fa-check-square me-1"></i>Remarks</button>
+        </div>
+        <h3 class="mt-5">Nutrition Facts</h3>
+        <ul class="list-group list-group-flush" v-if="nutritionFacts">
+            <li class="list-group-item ps-0 text-black-50" v-for="fact in nutritionFacts">
+                <strong v-if="fact.popular">
+                    <span class="text-body pe-1">{{fact.label}}:</span>{{fact.value.toFixed(0)}} {{fact.unit}}
+                </strong>
+                <template v-else>
+                    <span class="text-body pe-1">{{fact.label}}:</span>{{fact.value.toFixed(0)}} {{fact.unit}}
+                </template>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="modal fade" id="remarks-modal" tabindex="-1" aria-labelledby="remarks-modal-label" aria-hidden="true" v-if="recipe">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="remarks-modal-label">Remarks</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="allow-no-salt" v-model="recipe.allowNoSalt" v-on:change="changeRemark()" />
+                    <label class="form-check-label" for="allow-no-salt">Allow No Salt</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="allow-no-pepper" v-model="recipe.allowNoPepper" v-on:change="changeRemark()" />
+                    <label class="form-check-label" for="allow-no-pepper">Allow No Pepper</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="allow-no-apple-cider" v-model="recipe.allowNoAppleCider" v-on:change="changeRemark()" />
+                    <label class="form-check-label" for="allow-no-apple-cider">Allow No Apple Cider</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="allow-no-salmon-skin" v-model="recipe.allowNoSalmonSkin" v-on:change="changeRemark()" />
+                    <label class="form-check-label" for="allow-no-salmon-skin">Allow No Salmon Skin</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="price-chart-modal" tabindex="-1" aria-labelledby="price-chart-label" aria-hidden="true" ref="priceChartModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="price-chart-label">Price Structure</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="height: 600px; overflow: hidden">
+                <loading :show="loading.priceChart"></loading>
+                <canvas id="price-chart" class="w-100 d-block"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="transfer-food-modal" ref="transferFoodModal" aria-hidden="true" aria-labelledby="transfer-food-label" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="transfer-food-label">Transfer</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="form-control" placeholder="Search Food ..." v-on:input="searchFoods()" v-model="foodsQuery" />
+                <table class="table table-hover table-striped align-middle mt-3" :show="!loading.foods">
+                    <tbody>
+                        <tr v-for="food in foods">
+                            <td>{{food.title}}</td>
+                            <td>
+                                <button v-if="food.id != foodId" class="btn btn-sm btn-primary" v-on:click.prevent="transferFood(food)"><i class="fas fa-fw fa-random"></i></button>
+                                <span v-else class="text-primary">Current</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot v-if="!foods">
+                        <tr>
+                            <td colspan="4">No data found!</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+@await Html.PartialAsync("~/Views/Shared/Nutrition/_EditRecipe.cshtml")
+@await Html.PartialAsync("~/Views/Shared/Nutrition/_ManageOtherAmounts.cshtml")
+@await Html.PartialAsync("~/Views/Shared/Nutrition/_ManageSubstitutes.cshtml")
+@await Html.PartialAsync("~/Views/Shared/Nutrition/_IngredientOrder.cshtml")
+@await Html.PartialAsync("~/Views/Shared/Nutrition/_ManageDiets.cshtml")
+@await Html.PartialAsync("~/Views/Shared/Marketing/_ManageTags.cshtml")
+@await Html.PartialAsync("~/Views/Shared/Membership/_SelectUser.cshtml")
+@await Html.PartialAsync("~/Views/Shared/Membership/_Users.cshtml")
+@await Html.PartialAsync("~/Views/Shared/Financial/_RecipeStripe.cshtml")
+
+@section scripts {
+    <script src="~/dist/js/page/nutrition/recipe-details.js?ver=@ConfigHelper.CurrentVersion()"></script>
+}

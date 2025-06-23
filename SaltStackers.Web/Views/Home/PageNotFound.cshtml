@@ -1,0 +1,7 @@
+﻿@{
+    Layout = "_PublicLayout";
+    ViewData["Title"] = Error.PageNotFound;
+}
+<h1>@Error.PageNotFound</h1>
+<p class="mt-4">@Error.PageNotFoundMessage</p>
+<a asp-area="" asp-controller="Home" asp-action="Index" class="btn btn-lg btn-primary">@Global.BackToHomepage</a>

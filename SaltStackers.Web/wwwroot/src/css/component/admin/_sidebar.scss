@@ -1,0 +1,183 @@
+@import "_variables";
+
+#sidebar {
+    margin-top: 80px;
+    @include box-shadow(0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23));
+}
+
+.sidebar-wrapper,
+.header-bottom {
+    @include transition(all 0.3s ease);
+}
+
+.has-sidebar .sidebar-wrapper {
+    @include left-right(left, 0px, right, 0px);
+}
+
+@media screen and (min-width: 768px) {
+    .has-sidebar .page-content {
+        @include left-right(padding-left, 285px, padding-right, 285px);
+    }
+}
+
+.sidebar-wrapper {
+    background: #fff;
+    width: 260px;
+    height: 80vh;
+    max-height: 100%;
+    position: absolute;
+    border-radius: 10px;
+    margin-left: 10px;
+    top: 0;
+    @include left-right(left, -300px, right, -300px);
+    z-index: 999;
+
+    ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    .sidebar-content {
+        height: 100%;
+        overflow-y: auto;
+        position: relative;
+    }
+
+    .sidebar-header {
+        padding: 20px;
+        overflow: hidden;
+        /*.user-pic {
+            @include left-right(margin-right, 15px, margin-left, 15px);
+            float: leftRight(left, right);
+            width: 60px;
+            padding: 2px;
+            border-radius: 12px;
+            overflow: hidden;
+
+            img {
+                object-fit: cover;
+                height: 100%;
+                width: 100%;
+            }
+        }*/
+
+        .user-info {
+            /*@include left-right(float, left, float, right);*/
+
+            & > span {
+                display: block;
+            }
+
+            .user-role {
+                font-size: 12px;
+                color: $grey-700;
+            }
+
+            .user-status {
+                font-size: 12px;
+                margin-top: 4px;
+                color: $grey-700;
+
+                i, svg {
+                    font-size: 10px;
+                    @include left-right(margin-right, 2px, margin-left, 2px);
+                }
+            }
+        }
+    }
+
+    .sidebar-menu {
+        padding-bottom: 10px;
+
+        ul {
+            li {
+                a {
+                    display: inline-block;
+                    width: 100%;
+                    text-decoration: none;
+                    position: relative;
+                    padding: leftRight(8px 30px 8px 20px, 8px 20px 8px 30px);
+                    color: $grey-700;
+
+                    i, svg {
+                        @include left-right(margin-right, 10px, margin-left, 10px);
+                        font-size: 16px;
+                        line-height: 30px;
+                        text-align: center;
+                    }
+
+                    &:hover {
+                        & > i, svg {
+                            &:before {
+                                display: inline-block;
+                                animation: swing ease-in-out 0.5s 1 alternate;
+                            }
+                        }
+                    }
+                }
+
+                &:hover {
+                    & > a {
+                        color: #333;
+                    }
+                }
+
+                &.selected {
+                    & > a {
+                        background-color: $grey-100;
+                    }
+                }
+            }
+        }
+
+        .sidebar-dropdown {
+            div {
+                background: #fff;
+            }
+
+            & > a {
+                &:after {
+                    @include icon(leftRight("\f054", "\f053"));
+                    font-weight: 900;
+                    float: leftRight(right, left);
+                    margin-top: 5px;
+                    @include left-right(right, 10px, left, 10px);
+                    transition: all ease-in-out 0.2s;
+                }
+            }
+
+            &.active {
+                & > a:after {
+                    transform: rotate(90deg);
+                    transition: all ease-in-out 0.3s;
+                }
+
+                & > div {
+                    display: block;
+                }
+            }
+
+            .sidebar-submenu {
+                display: none;
+
+                ul {
+                    padding: 5px 0;
+                }
+
+                li {
+                    @include left-right(padding-left, 30px, padding-right, 30px);
+                    font-size: 13px;
+
+                    a svg[data-icon="circle"] {
+                        font-size: 10px;
+                    }
+                }
+            }
+        }
+    }
+}

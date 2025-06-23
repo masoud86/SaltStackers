@@ -1,0 +1,43 @@
+/*$primary: #3699FF;
+$success: #1BC5BD;
+$light: #E1F0FF;*/
+
+$primary: #34558b;
+$secondary: #576574;
+$success: #10ac84;
+$info: #0abde3;
+$warning: #ff9f43;
+$danger: #ee5253;
+$light: #c8d6e5;
+$dark: #222f3e;
+
+$input-font-size: 0.8rem;
+$input-font-size-lg: 0.8rem;
+$input-padding-y: 0.8rem;
+$input-padding-x: 1rem;
+$input-bg: #F3F6F9;
+$input-border-color: #F3F6F9;
+$input-focus-border-color: #EBEDF3;
+$form-select-focus-box-shadow: none;
+
+@import "~bootstrap/scss/bootstrap";
+
+.btn-primary {
+    color: #fff;
+
+    &:hover, &:focus,
+    &:active, &.active,
+    &:disabled, &.disabled {
+        color: #fff;
+    }
+}
+
+.btn-success {
+    color: #fff;
+
+    &:hover, &:focus,
+    &:active, &.active,
+    &:disabled, &.disabled {
+        color: #fff;
+    }
+}

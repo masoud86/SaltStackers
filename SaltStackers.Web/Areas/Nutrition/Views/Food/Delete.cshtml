@@ -1,0 +1,16 @@
+﻿@model SaltStackers.Application.ViewModels.Nutrition.DeleteFood
+@{
+    ViewData["Title"] = string.Format(Global.DeleteItem, Health.Food);
+    ViewData["Icon"] = Icon.Nutrition;
+}
+
+<div asp-validation-summary="All" class="alert alert-danger"></div>
+<form asp-area="Nutrition" asp-controller="Food" asp-action="Delete" asp-route-id="@Model.Id" method="post">
+    <p>@(Html.Raw(string.Format(Global.DeleteConfirm, Health.Food, Model.Title)))</p>
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <button type="submit" class="btn btn-danger text-white">@string.Format(Global.DeleteItem, Health.Food)</button>
+            <a asp-area="Nutrition" asp-controller="Food" asp-action="Index" class="btn btn-outline-secondary">@Global.Cancel</a>
+        </div>
+    </div>
+</form>

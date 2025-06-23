@@ -1,0 +1,23 @@
+@function fontSize($value) {
+    @if $direction=='ltr' {
+        @return px($default-font-size-ltr + $value);
+    }
+
+    @else {
+        @return px($default-font-size-rtl + $value);
+    }
+}
+
+@function px($value) {
+    @return $value+px;
+}
+
+@function leftRight($left, $right) {
+    @if $direction=='ltr' {
+        @return $left;
+    }
+
+    @else {
+        @return $right;
+    }
+}

@@ -1,0 +1,31 @@
+﻿<div class="modal fade" id="select-recipe-modal" ref="selectRecipeModal" aria-hidden="true" aria-labelledby="select-recipe-label" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="select-recipe-label">Select Recipe</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="form-control" placeholder="Search ..." v-on:input="searchRecipes()" v-model="recipeQuery" />
+                <table class="table table-hover table-striped align-middle mt-3">
+                    <thead>
+                        <tr>
+                            <th>Recipe</th>
+                            <th>Type</th>
+                            <th>Price</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="recipe in recipes">
+                            <td>{{recipe.food.title}}<template v-if="recipe.title"> ({{recipe.title}})</template></td>
+                            <td>{{recipe.recipeTypeTitle}}</td>
+                            <td>{{recipe.price.toFixed(2)}} CAD</td>
+                            <td><button class="btn btn-primary" v-on:click.prevent="selectRecipe(recipe)">Select</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

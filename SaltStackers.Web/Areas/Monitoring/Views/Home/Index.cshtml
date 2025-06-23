@@ -1,0 +1,11 @@
+﻿@{
+    ViewData["Title"] = Global.Monitoring;
+}
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4">
+    <div class="col mb-4" condition="@(User.Role() == "Administrator")">
+        <card-link url="/hangfire" title="Background Jobs" description="Background Jobs"></card-link>
+    </div>
+    <div class="col mb-4" condition="@(User.Role() == "Administrator")">
+        <card-link url="/watchdog" title="Log Viewer" description="Exception Logs"></card-link>
+    </div>
+</div>

@@ -1,0 +1,30 @@
+﻿<div class="modal fade" id="edit-username-modal" ref="editUsernameModal" aria-hidden="true" aria-labelledby="edit-username-label" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="edit-username-label">Edit Username</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" id="username" class="form-control" v-model="username" aria-describedby="username-help" />
+                        <div id="username-help" class="form-text">
+                            <ul>
+                                <li>Choose a username 6–30 characters long. Your username can be any combination of letters, numbers, or symbols.</li>
+                                <li>Usernames can contain letters (a-z), numbers (0-9), and periods (.).</li>
+                                <li>Usernames cannot contain an ampersand (&), equals sign (=), underscore (_), apostrophe ('), dash (-), plus sign (+), comma (,), brackets (<,>), or more than one period (.) in a row.</li>
+                                <li class="text-dark">The username is also the user's referral code.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary" v-on:click.prevent="updateUsername()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

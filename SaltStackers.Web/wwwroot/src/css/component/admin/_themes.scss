@@ -1,0 +1,167 @@
+@import "~bootstrap/scss/_mixins";
+@import "~bootstrap/scss/_functions";
+@import "~bootstrap/scss/_variables";
+
+$themes: (
+    "theme-blue": (
+        "primary-color": $color-year-2019
+    ),
+    "theme-purple": (
+        "primary-color": $purple-600
+    ),
+    "theme-green": (
+        "primary-color": $green-600
+    )
+);
+
+@each $theme, $map in $themes {
+    body.#{$theme}::-webkit-scrollbar-thumb,
+    body.#{$theme}::-webkit-scrollbar-thumb:hover,
+    body.#{$theme}::-webkit-scrollbar-thumb:active {
+        background-color: map-get($map, primary-color) !important;
+    }
+}
+
+.form-control {
+    &:focus {
+        @each $theme, $map in $themes {
+            .#{$theme} & {
+                border-color: map-get($map, primary-color);
+            }
+        }
+    }
+}
+
+.main-header {
+    @each $theme, $map in $themes {
+        .#{$theme} & {
+            background-color: map-get($map, primary-color);
+        }
+    }
+
+    .header-bottom {
+        h1 {
+            span {
+                i, svg {
+                    @each $theme, $map in $themes {
+                        .#{$theme} & {
+                            color: map-get($map, primary-color);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.sidebar-wrapper {
+    .sidebar-header .user-info .user-status {
+        a {
+            @each $theme, $map in $themes {
+                .#{$theme} & {
+                    color: map-get($map, primary-color);
+                }
+            }
+
+            &:hover, &:focus, &:active {
+                @each $theme, $map in $themes {
+                    $primary-color: map-get($map, primary-color);
+
+                    .#{$theme} & {
+                        color: lighten($primary-color,5%);
+                    }
+                }
+            }
+        }
+
+        i, svg {
+            @each $theme, $map in $themes {
+                .#{$theme} & {
+                    color: map-get($map, primary-color);
+                }
+            }
+        }
+    }
+
+    .sidebar-menu {
+        & > ul > li.selected {
+            & > a {
+
+                @each $theme, $map in $themes {
+                    $primary-color: map-get($map, primary-color);
+
+                    .#{$theme} & {
+                        background-color: lighten($primary-color,50%);
+                    }
+                }
+
+                & > i, & > svg {
+                    @each $theme, $map in $themes {
+                        .#{$theme} & {
+                            color: map-get($map, primary-color);
+                        }
+                    }
+                }
+            }
+
+            & > .sidebar-submenu {
+                & > ul > li.selected {
+                    & > a {
+                        & > i, & > svg {
+                            @each $theme, $map in $themes {
+                                .#{$theme} & {
+                                    color: map-get($map, primary-color);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.page-wrapper {
+    .card {
+        & > .card-header {
+            & > .card-menu {
+                a:not(.btn) {
+                    @each $theme, $map in $themes {
+                        .#{$theme} & {
+                            color: map-get($map, primary-color);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.release-notes {
+    h2 {
+        @each $theme, $map in $themes {
+            .#{$theme} & {
+                color: map-get($map, primary-color);
+            }
+        }
+    }
+
+    h3 {
+        @each $theme, $map in $themes {
+            $primary-color: map-get($map, primary-color);
+
+            .#{$theme} & {
+                color: lighten($primary-color,20%);
+            }
+        }
+    }
+}
+
+.page-item.active .page-link {
+    @each $theme, $map in $themes {
+        .#{$theme} & {
+            background-color: map-get($map, primary-color);
+            border-color: map-get($map, primary-color);
+        }
+    }
+}

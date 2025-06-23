@@ -1,0 +1,63 @@
+﻿@model SaltStackers.Application.ViewModels.Nutrition.Foods
+@{
+    ViewData["Title"] = Global.Foods;
+    ViewData["Icon"] = Icon.Nutrition;
+    Model.PageUrl = Url.Action("Index");
+}
+@section actions {
+<a href="#collapse-filters" class="mx-1" data-bs-toggle="collapse" aria-expanded="false"><i class="fas fa-fw fa-filter"></i></a>
+}
+@section mainAction {
+<a asp-area="Nutrition" asp-controller="Food" asp-action="Create" class="btn btn-sm btn-primary">@string.Format(Global.AddNew, Global.Food)</a>
+}
+<partial name="_Filters" />
+<div class="table-responsive">
+    <table class="table table-hover table-striped align-middle">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Profit Margin</th>
+                <th>Recipes</th>
+                <th>Last modified at</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Items != null && Model.Items.Any())
+            {
+                foreach (var item in Model.Items)
+                {
+                    var imageUrl = item.Attachments != null && item.Attachments.Any(p => p.IsMain)
+                        ? item.Attachments.FirstOrDefault(p => p.IsMain).Url
+                        : "/Uploads/Food/default-small.png";
+                    <tr>
+                        <td>
+                            <img src="@imageUrl" class="rounded me-1" width="50" alt="@item.Title" />
+                            <a asp-area="Nutrition" asp-controller="Recipe" asp-action="Index" asp-route-foodId="@item.Id">@item.Title</a>
+                        </td>
+                        <td>@item.ProfitMargin%</td>
+                        <td>
+                            <span class="d-block">Total: @item.Recipes.Count()</span>
+                            <small class="d-block"><span class="text-success">Active: @item.Recipes.Count(p => p.IsActive)</span> | <span class="text-danger">Deactivate: @item.Recipes.Count(p => !p.IsActive)</span></small>
+                            <ul class="list-inline small mb-0">
+                                @foreach (var recipeType in EnumHelper<RecipeType>.GetValues())
+                                {
+                                    <li class="list-inline-item">
+                                        @(EnumHelper<RecipeType>.GetDisplayValue(recipeType)): @item.Recipes.Count(p => p.RecipeType == recipeType && p.IsActive)
+                                    </li>
+                                }
+                            </ul>
+                        </td>
+                        <td><span title="@item.CreateDateTimeLocal">@item.CreateDateTimeHumanized</span></td>
+                        <td>
+                            <a asp-area="Nutrition" asp-controller="Food" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-link text-decoration-none link-primary"><i class="me-1 fa-fw @Icon.ButtonEdit"></i>@Global.Edit</a>
+                            <a asp-area="Nutrition" asp-controller="Food" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-link text-decoration-none link-danger"><i class="me-1 fa-fw @Icon.ButtonDelete"></i>@Global.Delete</a>
+                            <a asp-area="Nutrition" asp-controller="Recipe" asp-action="Index" asp-route-foodId="@item.Id" class="btn btn-sm btn-link text-decoration-none link-secondary"><i class="me-1 fa-fw @Icon.Recipe"></i>@Global.Recipes</a>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+<partial name="_PagingInfo" model="Model" />

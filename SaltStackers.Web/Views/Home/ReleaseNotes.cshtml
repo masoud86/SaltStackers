@@ -1,0 +1,8 @@
+﻿@model SaltStackers.Application.ViewModels.General.ReleaseNotes
+@{
+    ViewData["Title"] = Global.ReleaseNotes;
+    ViewData["Icon"] = Icon.ReleaseNotes;
+}
+<div class="release-notes">
+    @Html.Raw(Model.Content)
+</div>

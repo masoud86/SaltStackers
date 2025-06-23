@@ -1,0 +1,29 @@
+﻿@{
+    var sidebarState = Context.Request.Cookies["sidebar"];
+    var showSidebar = !string.IsNullOrEmpty(sidebarState) && sidebarState == "show";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <partial name="_LayoutHeader" />
+    @await RenderSectionAsync("styles", false)
+</head>
+<body id="app" class="theme-blue @(showSidebar ? "has-sidebar" : "")">
+    <partial name="_Header" />
+    <div class="page-wrapper">
+        <partial name="_Sidebar" />
+        <main class="page-content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        @RenderBody()
+                    </div>
+                </div>
+                @await RenderSectionAsync("appendix", false)
+            </div>
+        </main>
+    </div>
+    <partial name="_LayoutFooter" />
+    @await RenderSectionAsync("scripts", false)
+</body>
+</html>

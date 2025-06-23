@@ -1,0 +1,62 @@
+﻿@model SaltStackers.Application.ViewModels.Membership.RolePermissions
+@{
+    ViewData["Title"] = "Role Permissions";
+    ViewData["Icon"] = Icon.Role;
+    var counter = 0;
+}
+
+<form asp-area="Membership" asp-controller="Role" asp-action="Permissions" method="post">
+    <div asp-validation-summary="All"></div>
+    <input type="hidden" asp-for="RoleId" />
+    <input type="hidden" asp-for="RoleName" />
+    @if (Model.Permissions.Any())
+    {
+        <ul>
+            @foreach (var item in Model.Permissions.GroupBy(p => p.Group))
+            {
+                <li>
+                    @{
+                        var first = item.FirstOrDefault(p => p.Order == 0);
+                        var others = item.Where(p => p.Order != 0);
+                    }
+                    @if (first != null)
+                    {
+                        <input type="hidden" readonly="readonly" asp-for="Permissions[counter].Name" />
+                        <input type="hidden" readonly="readonly" asp-for="Permissions[counter].Group" />
+                        <input type="hidden" readonly="readonly" asp-for="Permissions[counter].Order" />
+                        <input type="hidden" readonly="readonly" asp-for="Permissions[counter].Title" />
+                        <input type="checkbox" asp-for="Permissions[counter].Selected" />
+                        <label for="Permissions_@(counter)__Selected">
+                            @first.Title
+                        </label>
+
+                        counter++;
+
+                        if (others.Any())
+                        {
+                            <ul>
+                                @foreach (var item2 in others)
+                                {
+                                    <li>
+                                        <input type="hidden" readonly="readonly" asp-for="Permissions[counter].Name" />
+                                        <input type="hidden" readonly="readonly" asp-for="Permissions[counter].Group" />
+                                        <input type="hidden" readonly="readonly" asp-for="Permissions[counter].Order" />
+                                        <input type="hidden" readonly="readonly" asp-for="Permissions[counter].Title" />
+                                        <input type="checkbox" asp-for="Permissions[counter].Selected" />
+                                        <label for="Permissions_@(counter)__Selected">
+                                            @item2.Title
+                                        </label>
+                                    </li>
+                                    counter++;
+                                }
+                            </ul>
+                        }
+                    }
+                </li>
+
+            }
+        </ul>
+    }
+
+    <button class="btn btn-sm btn-primary" type="submit">@Global.SaveChanges</button>
+</form>

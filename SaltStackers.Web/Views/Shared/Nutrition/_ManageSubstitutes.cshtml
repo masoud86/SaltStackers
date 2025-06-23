@@ -1,0 +1,81 @@
+﻿<div class="modal fade" id="manage-substitutes-modal" ref="manageSubstitutesModal" aria-hidden="true" aria-labelledby="manage-substitutes-label" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="manage-substitutes-label" v-if="selectedIngredient">{{selectedIngredient.title}}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-hover table-striped align-middle">
+                    <thead>
+                        <tr>
+                            <th>Substitute</th>
+                            <th>Process Fee</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="substitute in substitutes">
+                            <td>{{substitute.title}}</td>
+                            <td>{{substitute.processFee.toFixed(2)}} CAD</td>
+                            <td>
+                                <button class="btn btn-sm btn-link text-decoration-none link-primary" title="Edit" v-on:click.prevent="selectSubstitute(substitute)"><i class="@Icon.ButtonEdit"></i></button>
+                                <button class="btn btn-sm btn-link text-decoration-none link-danger" title="Delete" v-on:click.prevent="deleteSubstitute(substitute)"><i class="@Icon.ButtonDelete"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="row mb-3">
+                    <div class="col-md-6 mb-3 mb-sm-0">
+                        <label class="form-label" for="substitute-ingredient">Ingredient</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="substitute-ingredient" v-model="substitute.title" aria-label="Select Ingredient" aria-describedby="select-ingredient" readonly="readonly">
+                            <button class="btn btn-outline-secondary" type="button" id="select-ingredient" v-on:click.prevent="openSelectSubstitute()">Select</button>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3 mb-sm-0">
+                        <label class="form-label" for="substitute-process-fee">Process Fee</label>
+                        <input id="substitute-process-fee" class="form-control" v-model="substitute.processFee" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" v-if="substitute">
+                <button v-if="substitute.id" class="btn btn-primary" v-on:click.prevent="editSubstitute()" v-bind:disabled="substitute && (!substitute.title || !substitute.processFee)">Edit Substitute</button>
+                <button v-else class="btn btn-primary" v-on:click.prevent="createNewSubstitute()" v-bind:disabled="substitute && (!substitute.title || !substitute.processFee)" v-else>Add Substitute</button>
+                <button v-if="substitute.id" class="btn btn-outline-secondary" v-on:click.prevent="cancelSubstitute()">Cancel</button>
+                <button v-else class="btn btn-outline-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="select-substitute-modal" ref="selectSubstituteModal" aria-hidden="true" aria-labelledby="select-substitute-label" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="select-substitute-label">Select Substitute</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="form-control" placeholder="Search ..." v-on:input="searchSubstitutes()" v-model="substituteQuery" />
+                <table class="table table-hover table-striped align-middle mt-3">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="sub in filteredSubstitutes">
+                            <td>{{sub.title}}</td>
+                            <td><button class="btn btn-primary" v-on:click.prevent="selectNewSubstitute(sub)">Select</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

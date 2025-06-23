@@ -1,0 +1,30 @@
+﻿@model SaltStackers.Application.ViewModels.Base.Pagination
+@{ 
+    var from = Model.Start + 1;
+    var maxItems = Model.Page * Model.PageSize;
+    var to = maxItems < Model.FilteredCount ? maxItems : Model.FilteredCount;
+}
+<div class="d-flex w-100 justify-content-between mt-2">
+    @if (Model.FilteredCount == 0)
+    {
+        <p class="mb-0">@Global.EmptyList</p>
+    }
+    else
+    {
+        <p class="mb-0">
+            @string.Format(Global.PageInfo, from, to, Model.FilteredCount)
+            @if (Model.TotalCount > 0 && Model.FilteredCount != Model.TotalCount)
+            {
+                @: @string.Format(Global.PageInfoFiltered, Model.TotalCount)
+            }
+        </p>
+    }
+    <pager link-url="@Model.PageUrl"
+           page="@Model.Page"
+           page-size="@Model.PageSize"
+           total-items="@Model.FilteredCount"
+           skip-forward-back-navigation="Enabled"
+           next-page-text="@Global.Next"
+           previous-page-text="@Global.Previous">
+    </pager>
+</div>

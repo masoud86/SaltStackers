@@ -1,0 +1,19 @@
+﻿@model SaltStackers.Application.ViewModels.Nutrition.RecipeDto
+@{
+    ViewData["Title"] = string.Format(Global.EditItem, Global.Recipe);
+}
+<div class="row">
+    <div class="col-12">
+        <div asp-validation-summary="All" class="alert alert-danger"></div>
+        <form asp-area="Nutrition" asp-controller="Recipe" asp-action="Edit" asp-route-id="@Model.Id" asp-route-foodId="@Model.FoodId" method="post" ref="mainForm" v-on:submit.prevent="updateRecipeDetails()">
+            <partial name="_RecipeForm" />
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary me-1">@string.Format(Global.EditItem, Global.Recipe)</button>
+                <a asp-area="Nutrition" asp-controller="Recipe" asp-action="Index" asp-route-foodId="@Model.FoodId" class="btn btn-outline-secondary">@Global.Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+@section scripts {
+    <script src="~/dist/js/page/nutrition/recipe-form.js?ver=@ConfigHelper.CurrentVersion()"></script>
+}

@@ -1,0 +1,54 @@
+﻿@model SaltStackers.Application.ViewModels.Customer.CustomerDto
+@{
+    ViewData["Title"] = string.Format(Global.EditItem, Global.Customer);
+    ViewData["Icon"] = Icon.Customer;
+}
+
+<div asp-validation-summary="All" class="alert alert-danger"></div>
+<form asp-area="Membership" asp-controller="Customer" asp-action="Edit" asp-route-id="@Model.Id" method="post">
+    @Html.AntiForgeryToken()
+    <div class="row mb-3">
+        <div class="form-floating col-md-6 mb-3 mb-sm-0">
+            <input asp-for="Name" class="form-control" placeholder="Name" autocomplete="given-name" />
+            <label asp-for="Name"></label>
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="form-floating col-md-6 mb-3 mb-sm-0">
+            <input asp-for="PhoneNumber" class="form-control" placeholder="PhoneNumber" autocomplete="tel-country-code" />
+            <label asp-for="PhoneNumber"></label>
+            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+        </div>
+        <div class="form-floating col-md-6">
+            <input asp-for="Email" class="form-control" placeholder="Email" autocomplete="given-name" />
+            <label asp-for="Email"></label>
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="form-floating col-md-6 mb-3 mb-md-0">
+            <input asp-for="BirthDate" class="form-control" placeholder="BirthDate" />
+            <label asp-for="BirthDate"></label>
+            <span asp-validation-for="BirthDate" class="text-danger"></span>
+        </div>
+        <div class="form-floating col-md-6">
+            <select asp-for="Gender" class="form-select" placeholder="Gender" asp-items="@(Html.GetEnumSelectList<Gender>())"></select>
+            <label asp-for="Gender"></label>
+            <span asp-validation-for="Gender" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="form-floating col-md-6">
+            <select asp-for="BloodType" class="form-select" placeholder="BloodType" asp-items="@(Html.GetEnumSelectList<BloodType>())"></select>
+            <label asp-for="BloodType"></label>
+            <span asp-validation-for="BloodType" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <button type="submit" class="btn btn-primary">@string.Format(Global.EditItem, Global.Customer)</button>
+            <a asp-area="Membership" asp-controller="Customer" asp-action="Index" class="btn btn-outline-secondary">@Global.Cancel</a>
+        </div>
+    </div>
+</form>

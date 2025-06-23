@@ -1,0 +1,38 @@
+﻿@using reCAPTCHA.AspNetCore
+@using reCAPTCHA.AspNetCore.Versions
+@using Microsoft.Extensions.Options
+@inject IOptions<RecaptchaSettings> RecaptchaSettings
+
+@model SaltStackers.Application.ViewModels.Membership.Login
+@{
+    Layout = "_PublicLayout";
+    ViewData["Title"] = Security.LoginToSystem;
+}
+<div class="mt-5 mb-5">
+    <h2 class="page-title text-muted pb-3">@ViewData["Title"]</h2>
+</div>
+<div asp-validation-summary="All" class="text-danger"></div>
+<form asp-area="" asp-controller="Home" asp-action="Index" asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post" role="form" class="overflow-hidden">
+    <fieldset class="animate__animated animate__bounceIn">
+        @Html.AntiForgeryToken()
+        @(Html.Recaptcha(RecaptchaSettings.Value, new RecaptchaV3HiddenInput { IsAsync = false }))
+        <div class="form-group">
+            <label asp-for="Username" class="visually-hidden"></label>
+            <input asp-for="Username" class="form-control text-center direction-ltr" placeholder="@Global.Email" autocomplete="username" autofocus="autofocus" />
+            <span asp-validation-for="Username" class="text-danger"></span>
+        </div>
+        <div class="form-group mt-2">
+            <label asp-for="Password" class="visually-hidden"></label>
+            <input asp-for="Password" class="form-control text-center direction-ltr" placeholder="@Security.Password" autocomplete="current-password" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+        <div class="form-group mt-2 text-start">
+            <input asp-for="RememberMe" />
+            <label asp-for="RememberMe"></label>
+            <span asp-validation-for="RememberMe" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-lg btn-primary">@Security.Login</button>
+        </div>
+    </fieldset>
+</form>

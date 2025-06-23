@@ -1,0 +1,44 @@
+﻿@model SaltStackers.Application.ViewModels.Operation.Kitchen.Kitchens
+@{
+    ViewData["Title"] = "Kitchens";
+    Model.PageUrl = Url.Action("Index", "Kitchen", new { Area = "Operation" });
+}
+@section actions {
+    <a href="#collapse-filters" class="mx-1" data-bs-toggle="collapse" aria-expanded="false"><i class="fas fa-fw fa-filter"></i></a>
+}
+<partial name="_Filters" />
+<div class="table-responsive">
+    <table class="table table-hover table-striped align-middle">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Zone</th>
+                <th>Phone</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Items.Any())
+            {
+                foreach (var item in Model.Items)
+                {
+                    <tr>
+                        <td>
+                            <img src="~/Uploads/Kitchen/@item.Logo" class="img-thumbnail me-2" width="40" alt="@item.Title" />
+                            <a asp-area="Operation" asp-controller="Kitchen" asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-link text-decoration-none link-primary fw-bold">@item.Title</a>
+                        </td>
+                        <td>
+                            @item.Zone.Title
+                            <small class="d-block">@item.Location, @item.PostalCode</small>
+                        </td>
+                        <td>@item.PhoneNumber</td>
+                        <td class="text-@item.StatusColor">
+                            @(EnumHelper<PartnerStatus>.GetDisplayValue(item.Status))
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+<partial name="_PagingInfo" model="Model" />

@@ -1,0 +1,54 @@
+﻿@model SaltStackers.Application.ViewModels.Nutrition.RecipeDto
+@{
+    ViewData["Title"] = Global.CloneRecipe;
+    ViewData["Icon"] = Icon.Nutrition;
+}
+
+<div asp-validation-summary="All" class="alert alert-danger"></div>
+<form asp-area="Nutrition" asp-controller="Recipe" asp-action="Clone" asp-route-id="@Model.Id" asp-route-foodId="@Model.FoodId" method="post">
+    @Html.AntiForgeryToken()
+    <div class="row mb-3">
+        <div class="form-floating col-md-12 mb-3 mb-sm-0">
+            <select asp-for="FoodId" class="form-select" placeholder="Food" asp-items="@(new SelectList(Model.Foods, "Id", "Title"))"></select>
+            <label asp-for="Food"></label>
+            <span asp-validation-for="Food" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="form-floating col-md-6 mb-3 mb-sm-0">
+            <input asp-for="Title" class="form-control" placeholder="Title" />
+            <label asp-for="Title"></label>
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+        <div class="form-floating col-md-6 mb-3 mb-sm-0">
+            <select asp-for="RecipeType" class="form-select" placeholder="RecipeType" asp-items="@(Html.GetEnumSelectList<RecipeType>())"></select>
+            <label asp-for="RecipeType"></label>
+            <span asp-validation-for="RecipeType" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="form-floating col-md-6">
+            <select asp-for="Skill" class="form-select" placeholder="Stringency" asp-items="@(Html.GetEnumSelectList<SkillLevel>())"></select>
+            <label asp-for="Skill"></label>
+            <span asp-validation-for="Skill" class="text-danger"></span>
+        </div>
+        <div class="form-floating col-md-6 mb-3 mb-sm-0">
+            <input asp-for="PackagingTime" class="form-control" placeholder="PreparingDuration" />
+            <label asp-for="PackagingTime"></label>
+            <span asp-validation-for="PackagingTime" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-floating col-md-12 mb-3 mb-sm-0">
+            <textarea asp-for="Description" class="form-control" placeholder="Description"></textarea>
+            <label asp-for="Description"></label>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <button type="submit" class="btn btn-primary">@string.Format(Global.CloneItem, Global.Recipe)</button>
+            <a asp-area="Nutrition" asp-controller="Recipe" asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-secondary">@Global.Cancel</a>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,33 @@
+﻿@model SaltStackers.Application.ViewModels.Base.Pagination
+
+<div class="collapse show" id="collapse-filters">
+    <div class="card mb-3">
+        <div class="card-body">
+            <form asp-route-id="@Model.Page" method="get" class="filter-form">
+                <div class="row g-3">
+                    <div class="form-floating col-12 col-md-3">
+                        <input asp-for="Query" class="form-control" placeholder="Query" />
+                        <label asp-for="Query"></label>
+                        <span asp-validation-for="Query" class="text-danger"></span>
+                    </div>
+                    <div class="form-floating col-12 col-sm-5 col-md-3">
+                        <select asp-for="Sort" asp-items="@(new SelectList(Model.Columns, "Key", "Value"))" class="form-select" placeholder="Sort"></select>
+                        <label asp-for="Sort"></label>
+                        <span asp-validation-for="Sort" class="text-danger"></span>
+                    </div>
+                    <div class="form-floating col-6 col-sm-5 col-md-3">
+                        <select asp-for="Direction" asp-items="@(new SelectList(Model.SortDirections, "Key", "Value"))" class="form-select" placeholder="Direction"></select>
+                        <label asp-for="Direction"></label>
+                        <span asp-validation-for="Direction" class="text-danger"></span>
+                    </div>
+                    <div class="form-floating col-6 col-sm-2 col-md-2">
+                        <select asp-for="PageSize" asp-items="@(new SelectList(Model.PageSizes, "Key", "Value"))" class="form-select" placeholder="PageSize"></select>
+                        <label asp-for="PageSize"></label>
+                        <span asp-validation-for="PageSize" class="text-danger"></span>
+                    </div>
+                </div>
+                <button type="submit" class="d-none">OK</button>
+            </form>
+        </div>
+    </div>
+</div>

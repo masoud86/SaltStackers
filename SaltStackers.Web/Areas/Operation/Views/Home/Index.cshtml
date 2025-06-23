@@ -1,0 +1,9 @@
+﻿@{
+    ViewData["Title"] = "Operation";
+    ViewData["Icon"] = Icon.Operation;
+}
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4">
+    <div class="col mb-4" condition="@User.HasPermission("Operation|Kitchen|Index")">
+        <card-link url="@Url.ActionLink("Index", "Kitchen", new { Area = "Operation" })" title="@Global.Kitchens" icon="fas fa-sink" description="All kitchens"></card-link>
+    </div>
+</div>

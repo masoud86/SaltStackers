@@ -1,0 +1,16 @@
+﻿@model SaltStackers.Application.ViewModels.Membership.UserDto
+@{
+    ViewData["Title"] = string.Format(Security.BlockItem, Security.User);
+    ViewData["Icon"] = Icon.User;
+}
+
+<div asp-validation-summary="All" class="alert alert-danger"></div>
+<form asp-area="Membership" asp-controller="User" asp-action="Block" asp-route-id="@Model.Id" method="post">
+    <p>@(Html.Raw(string.Format(Security.BlockConfirm, Model.Name)))</p>
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <button type="submit" class="btn btn-sm btn-danger">@string.Format(Security.BlockItem, Security.User)</button>
+            <a asp-area="Membership" asp-controller="User" asp-action="Index" class="btn btn-sm btn-outline-secondary">@Global.Cancel</a>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,50 @@
+﻿@model SaltStackers.Application.ViewModels.Customer.CustomerAddressDto
+@{
+    ViewData["Title"] = "Add Customer Address";
+    ViewData["Icon"] = Icon.Customer;
+}
+
+<div asp-validation-summary="All" class="alert alert-danger"></div>
+<form asp-area="Membership" asp-controller="Customer" asp-action="CreateAddress" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="UserId" />
+    <div class="row mb-3">
+        <div class="form-floating col-md-6">
+            <input asp-for="PostalCode" class="form-control" placeholder="Postal Code" />
+            <label asp-for="PostalCode"></label>
+            <span asp-validation-for="PostalCode" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="form-floating col-md-12 mb-3 mb-md-0">
+            <input asp-for="Address" class="form-control" placeholder="Address" />
+            <label asp-for="Address"></label>
+            <span asp-validation-for="Address" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="form-floating col-md-6">
+            <input asp-for="Unit" class="form-control" placeholder="Note" />
+            <label asp-for="Unit"></label>
+            <span asp-validation-for="Unit" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="form-floating col-md-6 mb-3 mb-sm-0">
+            <input asp-for="Latitude" class="form-control" placeholder="Latitude" />
+            <label asp-for="Latitude"></label>
+            <span asp-validation-for="Latitude" class="text-danger"></span>
+        </div>
+        <div class="form-floating col-md-6">
+            <input asp-for="Longitude" class="form-control" placeholder="Longitude" />
+            <label asp-for="Longitude"></label>
+            <span asp-validation-for="Longitude" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <button type="submit" class="btn btn-primary">Add Customer Address</button>
+            <a asp-area="Membership" asp-controller="Customer" asp-action="Index" class="btn btn-outline-secondary">@Global.Cancel</a>
+        </div>
+    </div>
+</form>

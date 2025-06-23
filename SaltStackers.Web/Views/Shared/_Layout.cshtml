@@ -1,0 +1,45 @@
+﻿@{
+    var sidebarState = Context.Request.Cookies["sidebar"];
+    var showSidebar = !string.IsNullOrEmpty(sidebarState) && sidebarState == "show";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <partial name="_LayoutHeader" />
+    @await RenderSectionAsync("styles", false)
+</head>
+<body id="app" class="theme-blue @(showSidebar ? "has-sidebar" : "")">
+    <partial name="_Header" />
+    <div class="page-wrapper">
+        <partial name="_Sidebar" />
+        <main class="page-content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card mb-3">
+                            <div class="card-header">
+                                <div class="card-menu d-print-none">
+                                    @await RenderSectionAsync("mainAction", false)
+                                    <div class="float-end">
+                                        @await RenderSectionAsync("actions", false)
+                                        <button class="btn btn-sm btn-link text-decoration-none link-primary px-1 do-print" onclick="window.print();"><i class="fas fa-fw fa-print"></i></button>
+                                        <button class="btn btn-sm btn-link text-decoration-none link-primary px-1 expand-card"><i class="fas fa-fw fa-expand"></i></button>
+                                        <button class="btn btn-sm btn-link text-decoration-none link-primary px-1 slide-card"><i class="fas fa-fw fa-minus"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                @RenderBody()
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @await RenderSectionAsync("appendix", false)
+            </div>
+        </main>
+    </div>
+    <partial name="_LayoutFooter" />
+    @await RenderSectionAsync("scripts", false)
+</body>
+</html>

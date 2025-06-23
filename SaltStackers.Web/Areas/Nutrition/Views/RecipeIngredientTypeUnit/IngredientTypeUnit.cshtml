@@ -1,0 +1,8 @@
+﻿@model SaltStackers.Application.ViewModels.Nutrition.IngredientTypeUnitDropDownDto
+
+<select asp-for="IngredientTypeUnitId" class="form-select" asp-items="@(new SelectList(Model.IngredientTypeUnits, "Id", "Unit.Title"))">
+    <option disabled selected>--- SELECT ---</option>
+</select>
+<label asp-for="IngredientTypeUnitId"></label>
+<span asp-validation-for="IngredientTypeUnitId" class="text-danger"></span>
+

@@ -1,0 +1,250 @@
+﻿@model SaltStackers.Application.ViewModels.Operation.Kitchen.KitchenDto
+@{
+    ViewData["Title"] = Model.Title;
+    Layout = "_LayoutEmpty";
+}
+<input type="hidden" id="kitchen-id" value="@Model.Id" ref="kitchenId" />
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <loading :show="loading.orderChart"></loading>
+            <div class="card-header">
+                <div class="card-menu d-flex justify-content-between d-print-none">
+                    <div class="d-flex align-items-center">
+                        Total Orders:
+                        <button type="button" class="btn btn-sm btn-link text-decoration-none shadow-none" v-on:click.prevent="setOrderPeriod(8)" v-bind:class="{ 'link-danger fw-bold': orderPeriod == 8, 'link-secondary': orderPeriod != 8 }">8 weeks</button>
+                        <button type="button" class="btn btn-sm btn-link text-decoration-none shadow-none" v-on:click.prevent="setOrderPeriod(16)" v-bind:class="{ 'link-danger fw-bold': orderPeriod == 16, 'link-secondary': orderPeriod != 16 }">16 weeks</button>
+                        <button type="button" class="btn btn-sm btn-link text-decoration-none shadow-none" v-on:click.prevent="setOrderPeriod(36)" v-bind:class="{ 'link-danger fw-bold': orderPeriod == 36, 'link-secondary': orderPeriod != 36 }">36 weeks</button>
+                        <strong class="ms-3 px-2 text-bg-success rounded-pill">{{totalOrder}}</strong>
+                    </div>
+                    <div>
+                        <a href="#" class="mx-1 expand-card"><i class="fas fa-fw fa-expand"></i></a>
+                        <a href="#" class="mx-1 slide-card"><i class="fas fa-fw fa-minus"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body pt-0" style="height: 300px; overflow: hidden">
+                <canvas id="order-chart" class="w-100 d-block"></canvas>
+            </div>
+        </div>
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Prep Day</th>
+                                <th class="text-center">Cut Off</th>
+                                <th class="text-center">Delivery</th>
+                                <th class="text-center">Pickup</th>
+                                <th>Covered Days</th>
+                            </tr>
+                        </thead>
+                        <tbody v-if="!loading.cookingDays && cookingDays">
+                            <tr v-for="item in cookingDays">
+                                <td>{{item.cookingDayTitle}}</td>
+                                <td class="text-center">{{item.cutOff}} hrs<small class="d-block text-muted">{{item.cutOffHumanized}}</small></td>
+                                <td class="text-center">{{item.deliveryDayTitle}}<small class="d-block text-muted">{{item.deliveryPeriod}}</small></td>
+                                <td class="text-center">{{item.pickupDayTitle}}<small class="d-block text-muted">{{item.pickupPeriod}}</small></td>
+                                <td>{{item.coverableDaysList.join(', ')}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="card mb-4">
+            <div class="card-header">
+                <div class="card-menu d-flex justify-content-between d-print-none">
+                    <div class="d-flex align-items-center">
+                        Recipes
+                    </div>
+                    <div>
+                        <a href="#" class="mx-1" id="open-new-recipe" v-on:click.prevent="openAddRecipeForm()"><i class="fas fa-fw fa-plus"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <loading :show="loading.currentRecipes"></loading>
+                <input type="text" class="form-control" placeholder="Search ..." v-model="currentRecipesQuery" aria-label="Current Recipes Filter" aria-describedby="open-new-recipe" />
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped align-middle mt-3" :show="!loading.currentRecipes">
+                        <tbody>
+                            <tr v-for="kitchen in filteredCurrentRecipes">
+                                <td>
+                                    {{kitchen.recipe.food.title}}<template v-if="kitchen.recipe.title"> ({{kitchen.recipe.title}})</template>
+                                    <a class="ms-1" target="_blank" :href="'/Nutrition/Recipe/Details/' + kitchen.recipe.id"><i class="fas fa-external-link-alt"></i></a>
+                                    <span class="text-muted d-block">{{kitchen.recipe.code}}</span>
+                                </td>
+                                <td>${{kitchen.recipe.price.toFixed(2)}}</td>
+                                <td class="w-50">
+                                    <p class="mb-1">
+                                        <span class="badge me-1 bg-secondary text-white" title="Type">{{kitchen.recipe.recipeTypeTitle}}</span>
+                                        <span class="badge me-1 bg-secondary text-white" title="Skill Level">{{kitchen.recipe.skillTitle}}</span>
+                                        <span class="badge me-1 bg-secondary text-white" title="Packaging Time">{{kitchen.recipe.packagingTime}} min</span>
+                                        <span v-if="kitchen.recipe.recipeSize == 1" class="badge me-1 bg-secondary-subtle text-dark" title="Size">{{kitchen.recipe.recipeSizeTitle}}</span>
+                                        <span v-else class="badge me-1 bg-warning text-white" title="Size">{{kitchen.recipe.recipeSizeTitle}}</span>
+                                    </p>
+                                    <span v-if="kitchen.recipe.mainMenu" class="badge me-1 bg-primary text-white">Main Menu</span>
+                                    <span v-if="kitchen.recipe.defaultInCategory" class="badge me-1 bg-secondary-subtle text-dark">Default in Category</span>
+                                    <span v-if="kitchen.recipe.isRoutine" class="badge me-1 bg-info-subtle text-dark">Routine</span>
+                                    <span v-if="kitchen.recipe.isOption" class="badge me-1 bg-warning-subtle text-dark">Option</span>
+                                    <span v-if="kitchen.recipe.isNew" class="badge me-1 bg-danger-subtle text-dark">New</span>
+                                    <span v-if="kitchen.recipe.isTwoStepCooking" class="badge me-1 bg-danger-subtle text-dark">Two-Step Cooking</span>
+                                    <span v-if="kitchen.recipe.isActive" class="badge me-1 bg-success-subtle text-dark">Active</span>
+                                    <span v-if="!kitchen.recipe.isActive" class="badge me-1 bg-danger text-white">Deactivate</span>
+                                    <span v-if="kitchen.recipe.recipeOwners.length > 0" class="badge me-1 text-bg-light position-relative">
+                                        <i class="fas fa-fw fa-user"></i>
+                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                            {{kitchen.recipe.recipeOwners.length}}
+                                            <span class="visually-hidden">Recipe Owners</span>
+                                        </span>
+                                    </span>
+                                    <span v-if="kitchen.recipe.priority" class="badge me-1 bg-danger text-white" title="Priority">{{kitchen.recipe.priority}}</span>
+                                </td>
+                                <td>
+                                    <span v-for="day in kitchen.recipe.recipeCookingDays" v-on:click.prevent="openRecipeCookingDaysModal(kitchen.recipe)" class="badge me-1 bg-primary text-white">{{day.kitchenCookingDay.cookingDayTitle}}</span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-link text-decoration-none link-primary" v-on:click.prevent="openRecipeCookingDaysModal(kitchen.recipe)">
+                                        <i class="fas fa-fw fa-calendar-day"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-link text-decoration-none link-danger" v-on:click.prevent="removeRecipe(kitchen.recipe)">
+                                        <i class="fas fa-fw fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot v-if="!filteredCurrentRecipes">
+                            <tr>
+                                <td colspan="6">No data found!</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header">Reports</div>
+            <div class="card-body pt-0">
+                <div class="list-group list-group-flush">
+                    <a asp-area="Operation" asp-controller="Order" asp-action="Index" asp-route-kitchenId="@Model.Id" class="list-group-item list-group-item-action">
+                        <i class="fas fa-fw me-2 fa-list"></i>Orders
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="add-recipe-modal" ref="addRecipeModal" aria-hidden="true" aria-labelledby="add-recipe-label" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="manage-recipes-label">Add New Recipe</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <loading :show="loading.recipes"></loading>
+                <input type="text" class="form-control" placeholder="Search ..." v-on:input="searchRecipes()" v-model="recipesQuery" />
+                <table class="table table-hover table-striped align-middle mt-3" :show="!loading.recipes">
+                    <tbody>
+                        <tr v-for="recipe in recipes">
+                            <td>
+                                {{recipe.food.title}}<template v-if="recipe.title"> ({{recipe.title}})</template>
+                                <a class="ms-1" target="_blank" :href="'/Nutrition/Recipe/Details/' + recipe.id"><i class="fas fa-external-link-alt"></i></a>
+                                <span class="text-muted d-block">{{recipe.code}}</span>
+                            </td>
+                            <td>${{recipe.price.toFixed(2)}}</td>
+                            <td>
+                                <p class="mb-1">
+                                    <span class="badge me-1 bg-secondary text-white" title="Type">{{recipe.recipeTypeTitle}}</span>
+                                    <span class="badge me-1 bg-secondary text-white" title="Skill Level">{{recipe.skillTitle}}</span>
+                                    <span class="badge me-1 bg-secondary text-white" title="Packaging Time">{{recipe.packagingTime}} min</span>
+                                    <span v-if="recipe.recipeSize == 1" class="badge me-1 bg-secondary-subtle text-dark" title="Size">{{recipe.recipeSizeTitle}}</span>
+                                    <span v-else class="badge me-1 bg-warning text-white" title="Size">{{recipe.recipeSizeTitle}}</span>
+                                </p>
+                                <span v-if="recipe.mainMenu" class="badge me-1 bg-primary text-white">Main Menu</span>
+                                <span v-if="recipe.defaultInCategory" class="badge me-1 bg-secondary-subtle text-dark">Default in Category</span>
+                                <span v-if="recipe.isRoutine" class="badge me-1 bg-info-subtle text-dark">Routine</span>
+                                <span v-if="recipe.isOption" class="badge me-1 bg-warning-subtle text-dark">Option</span>
+                                <span v-if="recipe.isNew" class="badge me-1 bg-danger-subtle text-dark">New</span>
+                                <span v-if="recipe.isTwoStepCooking" class="badge me-1 bg-danger-subtle text-dark">Two-Step Cooking</span>
+                                <span v-if="recipe.isActive" class="badge me-1 bg-success-subtle text-dark">Active</span>
+                                <span v-if="!recipe.isActive" class="badge me-1 bg-danger text-white">Deactivate</span>
+                                <span v-if="recipe.recipeOwners.length > 0" class="badge me-1 text-bg-light position-relative">
+                                    <i class="fas fa-fw fa-user"></i>
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                        {{recipe.recipeOwners.length}}
+                                        <span class="visually-hidden">Recipe Owners</span>
+                                    </span>
+                                </span>
+                                <span v-if="recipe.priority" class="badge me-1 bg-danger text-white" title="Priority">{{recipe.priority}}</span>
+                            </td>
+                            <td>
+                                <button v-if="isCurrentRecipe(recipe)" class="btn btn-sm btn-danger text-white" v-on:click.prevent="removeRecipe(recipe)">
+                                    <i class="fas fa-fw fa-trash"></i>
+                                </button>
+                                <button v-else class="btn btn-sm btn-success" v-on:click.prevent="addRecipe(recipe)">
+                                    <i class="fas fa-fw fa-plus"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot v-if="!recipes">
+                        <tr>
+                            <td colspan="4">No data found!</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="recipe-cooking-days-modal" ref="recipeCookingDaysModal" aria-hidden="true" aria-labelledby="recipe-cooking-days-label" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="recipe-cooking-days-label">Recipe Cooking Days</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p v-if="selectedRecipe">
+                    {{selectedRecipe.food.title}}<template v-if="selectedRecipe.title"> ({{selectedRecipe.title}})</template>
+                    <span class="text-muted ps-2">{{selectedRecipe.code}}</span>
+                    <a class="ms-1" target="_blank" :href="'/Nutrition/Recipe/Details/' + selectedRecipe.id"><i class="fas fa-external-link-alt"></i></a>
+                </p>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Prep Day</th>
+                                <th class="text-center">Cut Off</th>
+                                <th class="text-center">Delivery</th>
+                                <th class="text-center">Pickup</th>
+                                <th>Covered Days</th>
+                            </tr>
+                        </thead>
+                        <tbody v-if="cookingDaysTemp">
+                            <tr v-for="item in cookingDaysTemp">
+                                <td class="text-center">
+                                    <input type="checkbox" :id="'cooking-day-' + item.id" :checked="isChecked(item)" v-on:change="changeRecipeCookingDay(item)" />
+                                </td>
+                                <td>{{item.cookingDayTitle}}</td>
+                                <td class="text-center">{{item.cutOff}} hrs<small class="d-block text-muted">{{item.cutOffHumanized}}</small></td>
+                                <td class="text-center">{{item.deliveryDayTitle}}<small class="d-block text-muted">{{item.deliveryPeriod}}</small></td>
+                                <td class="text-center">{{item.pickupDayTitle}}<small class="d-block text-muted">{{item.pickupPeriod}}</small></td>
+                                <td>{{item.coverableDaysList.join(', ')}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts {
+    <script src="~/dist/js/page/operation/kitchen-details.js?ver=@ConfigHelper.CurrentVersion()"></script>
+}

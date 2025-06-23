@@ -1,0 +1,76 @@
+﻿@model SaltStackers.Application.ViewModels.Nutrition.Package.Packages
+@{
+    ViewData["Title"] = "Packages";
+    Model.PageUrl = Url.Action("Index");
+}
+@section actions {
+    <a href="#collapse-filters" class="mx-1" data-bs-toggle="collapse" aria-expanded="false"><i
+            class="fas fa-fw fa-filter"></i></a>
+}
+@section mainAction {
+    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
+        data-bs-target="#create-package-modal">@string.Format(Global.AddNew,
+    "Package")</button>
+}
+<partial name="_Filters" />
+<div class="table-responsive">
+    <table class="table table-hover table-striped align-middle">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Subtitle</th>
+                <th>Code</th>
+                <th>Price</th>
+                <th>Status</th>
+                <th>Create Time</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Items != null && Model.Items.Any())
+            {
+                foreach (var item in Model.Items)
+                {
+                    <tr>
+                        <td>@item.Title</td>
+                        <td>@item.Subtitle</td>
+                        <td>@item.Code</td>
+                        <td>@item.Price</td>
+                        <td>@(item.IsActive ? "Active" : "Deactivate")</td>
+                        <td>@item.CreateDateTimeLocal</td>
+                        <td>
+                            <a asp-area="Nutrition" asp-controller="Package" asp-action="Edit" asp-route-id="@item.Id"
+                                class="btn btn-sm btn-link text-decoration-none link-primary"><i
+                                    class="me-1 fa-fw @Icon.ButtonEdit"></i>@Global.Edit</a>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+<partial name="_PagingInfo" model="Model" />
+<div class="modal fade" id="create-package-modal" tabindex="-1" aria-labelledby="create-package-modal-label"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="create-package-modal-label">Add New Package</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form asp-area="Nutrition" asp-controller="Package" asp-action="Create" method="post">
+                    <div class="col mb-3">
+                        <label for="title" class="form-label">Title</label>
+                        <input id="title" name="title" class="form-control" type="text" />
+                    </div>
+                    <div class="col">
+                        <button type="submit" class="btn btn-primary me-1">@string.Format(Global.AddNew,
+                            "Package")</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,104 @@
+﻿@model SaltStackers.Application.ViewModels.Nutrition.RecipeIngredientTypeUnitDto
+@{
+    ViewData["Title"] = string.Format(Global.AddNew, Global.RecipeIngredientTypeUnit);
+}
+
+<div asp-validation-summary="All" class="alert alert-danger"></div>
+<form asp-area="Nutrition" asp-controller="RecipeIngredientTypeUnit" asp-action="Edit" asp-route-recipeId="@Model.RecipeId" method="post">
+    @Html.AntiForgeryToken()
+    <div class="row mb-3">
+        <div class="form-floating col-md-6 mb-3 mb-sm-0">
+            <select asp-for="IngredientId" class="form-select" asp-items="@(new SelectList(Model.Ingredients, "Id", "Title"))">
+                <option disabled selected>--- SELECT ---</option>
+            </select>
+            <label asp-for="IngredientId"></label>
+            <span asp-validation-for="IngredientId" class="text-danger"></span>
+        </div>
+        <div class="form-floating col-md-6 mb-3 mb-sm-0 ingredientTypeContainer">
+            <select asp-for="IngredientTypeId" class="form-select" asp-items="@(new SelectList(Model.IngredientTypes, "Id", "Title"))">
+                <option disabled selected>--- SELECT ---</option>
+            </select>
+            <label asp-for="IngredientTypeId"></label>
+            <span asp-validation-for="IngredientTypeId" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="form-floating col-md-6 mb-3 mb-sm-0 ingredientTypeUnitContainer">
+            <select asp-for="IngredientTypeUnitId" class="form-select" asp-items="@(new SelectList(Model.IngredientTypeUnits, "Id", "Unit.Title"))">
+                <option disabled selected>--- SELECT ---</option>
+            </select>
+            <label asp-for="IngredientTypeUnitId"></label>
+            <span asp-validation-for="IngredientTypeUnitId" class="text-danger"></span>
+        </div>
+        <div class="form-floating col-md-6 mb-3 mb-sm-0">
+            <input asp-for="Amount" class="form-control" placeholder="Amount" autocomplete="given-name" />
+            <label asp-for="Amount"></label>
+            <span asp-validation-for="Amount" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" asp-for="IsAddOn">
+                <label class="form-check-label" asp-for="IsAddOn">
+                    Is Adds-On?
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" asp-for="IsDressing">
+                <label class="form-check-label" asp-for="IsDressing">
+                    Is Dressing?
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <button type="submit" class="btn btn-primary">Edit Ingredient</button>
+            <a asp-area="Nutrition" asp-controller="RecipeIngredientTypeUnit" asp-action="Index" asp-route-recipeId="@Model.RecipeId" class="btn btn-outline-secondary">@Global.Cancel</a>
+        </div>
+    </div>
+</form>
+
+@section scripts {
+
+    <script>
+        $(function () {
+              $('body').on('change',
+                '#IngredientId',
+                function () {
+                    var $this = $(this);
+                    $.ajax({
+                            url: "@Url.Action("GetIngredientTypes", "RecipeIngredientTypeUnit", new { area = "Nutrition"})",
+                            type: 'GET',
+                            cache: false,
+                            data: { ingredientId: $this.val() }
+
+                        }).done(function (result) {
+                            $(".ingredientTypeContainer").html(result);
+                        });
+                  });
+
+             $('body').on('change',
+                '#IngredientTypeId',
+                function () {
+                    var $this = $(this);
+                    $.ajax({
+                            url: "@Url.Action("GetIngredientTypeUnits", "RecipeIngredientTypeUnit", new { area = "Nutrition"})",
+                            type: 'GET',
+                            cache: false,
+                            data: { ingredientTypeId: $this.val() }
+
+                        }).done(function (result) {
+                            $(".ingredientTypeUnitContainer").html(result);
+                        });
+                  });
+
+        });
+    </script>
+}

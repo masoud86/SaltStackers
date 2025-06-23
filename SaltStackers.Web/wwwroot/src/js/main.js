@@ -1,0 +1,15 @@
+﻿import './component/jquery';
+import './component/bootstrap';
+import './component/cookie';
+import './component/links';
+import './component/shortcuts';
+import './component/toastr';
+import './component/sidebar';
+import './component/full-screen';
+import './component/cards';
+import './component/logoff';
+import './component/helper';
+import './component/filters';
+import './component/axios';
+import './component/vue';
+import './component/loading';

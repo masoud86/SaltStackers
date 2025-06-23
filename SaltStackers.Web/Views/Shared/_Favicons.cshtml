@@ -1,0 +1,16 @@
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+@{
+    var version = @Configuration.GetSection("Version").Value;
+}
+<link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png?ver=@version">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png?ver=@version">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png?ver=@version">
+<link rel="manifest" href="/favicon/site.webmanifest?ver=@version">
+<link rel="mask-icon" href="/favicon/safari-pinned-tab.svg?ver=@version" color="#5bbad5">
+<link rel="shortcut icon" href="/favicon/favicon.ico?ver=@version">
+<meta name="apple-mobile-web-app-title" content="CP Admin">
+<meta name="application-name" content="CP Admin">
+<meta name="msapplication-TileColor" content="#00a300">
+<meta name="msapplication-config" content="/favicon/browserconfig.xml?ver=@version">
+<meta name="theme-color" content="#ffffff">

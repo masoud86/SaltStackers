@@ -1,0 +1,40 @@
+﻿@{
+    var sidebarState = Context.Request.Cookies["sidebar"];
+    var showSidebar = !string.IsNullOrEmpty(sidebarState) && sidebarState == "show";
+}
+<header class="main-header">
+    <div class="header-top d-print-none">
+        <div class="hamburger hamburger--vortex toggle-menu @(showSidebar ? "is-active" : "")" title="Toggle Sidebar (Alt+X)">
+            <span class="hamburger-box">
+                <span class="hamburger-inner"></span>
+            </span>
+        </div>
+        <a href="/" class="brand">
+            <img src="~/dist/assets/images/logo.svg" width="200" />
+        </a>
+        <div class="features">
+            <a href="#" class="full-screen d-none d-sm-none d-md-inline-block"></a>
+        </div>
+        <div class="modal fade" id="search-modal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-body search-form">
+                        <form action="">
+                            <div class="form-group mb-0">
+                                <input type="search" class="form-control" id="query" name="query" placeholder="Search ..." autocomplete="off" />
+                            </div>
+                            <button class="btn btn-primary d-none" type="submit">Search</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="header-bottom">
+        <h1 class="fs-2">@ViewData["Title"]</h1>
+        <breadcrumb asp-homepage-title=""
+                    asp-homepage-url="@Url.Action("Dashboard", "Home", new { area = "" })"
+                    asp-bootstrap-version="V4"
+                    asp-homepage-glyphicon="fas fa-home"></breadcrumb>
+    </div>
+</header>

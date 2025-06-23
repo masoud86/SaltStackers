@@ -1,0 +1,167 @@
+﻿<div class="modal fade" id="customize-recipe-modal" ref="customizeRecipeModal" aria-hidden="true" aria-labelledby="customize-recipe-label" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="customize-recipe-label">Customize Recipe</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Recipe</th>
+                            <th>Type</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+                    <tbody v-if="selectedRecipe">
+                        <tr>
+                            <td>{{selectedRecipe.food.title}} ({{selectedRecipe.title}})</td>
+                            <td>{{selectedRecipe.recipeTypeTitle}}</td>
+                            <td>{{selectedRecipe.price}} CAD</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="row" v-if="recipe">
+                    <div class="col-12">
+                        <span class="text-muted pe-1">Diet:</span>{{recipe.diets.map(p => p.title).join(', ')}}
+                    </div>
+                    <div class="col-12">
+                        <span class="text-muted pe-1">Tags:</span>{{recipe.tags.map(p => p.title).join(', ')}}
+                    </div>
+                    <div class="col-12">
+                        <span class="text-muted pe-1">Prep Days:</span>{{recipe.prepDays.map(p => p.name).join(', ')}}
+                    </div>
+                    <div class="col-12">
+                        <span class="text-muted pe-1">Ingredients:</span>{{recipe.ingredients.join(', ')}}
+                    </div>
+                    <div class="col-12 mt-3">
+                        <div class="row row-cols-auto mx-0">
+                            <div class="col border rounded bg-secondary text-white mb-1 text-center" v-for="fact in recipe.nutritionFacts">
+                                <h6 class="mt-2">{{fact.value}} {{fact.unit}}</h6>
+                                <p class="mb-1">{{fact.label}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 mt-3" v-if="recipe.customize && recipe.customize.flags">
+                        <div class="row row-cols-auto mx-0">
+                            <div class="col border rounded bg-secondary text-white mb-1 pt-1 text-center" v-for="flag in recipe.customize.flags">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" v-bind:value="flag.key" v-model="selectedFlags" v-bind:name="flag.key" v-bind:id="flag.key" v-on:change="changeRecipeFlag()" />
+                                    <label class="form-check-label" v-bind:for="flag.key">
+                                        {{flag.title}}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 mt-3" v-if="recipe.customize && recipe.customize.ingredients">
+                        <div class="card text-dark bg-light mb-3" v-for="ingredient in recipe.customize.ingredients">
+                            <div class="card-header">{{ingredient.title}} ({{ingredient.defaultSize}}{{ingredient.unit}})</div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-12" v-if="ingredient.substitues.length > 1">
+                                        <h6><strong>Substitutes</strong></h6>
+                                        <div class="form-check" v-for="substitute in ingredient.substitues">
+                                            <input class="form-check-input" type="radio" value=""
+                                                v-on:change="substituteIngredient(ingredient.id, ingredient.type, substitute.id, ingredient.defaultSize)"
+                                                v-bind:name="ingredient.title.toLowerCase().replace(/ /g, '-').concat('-', 'substitute')"
+                                                v-bind:id="ingredient.title.toLowerCase().replace(/ /g, '-').concat('-', substitute.title.toLowerCase().replace(/ /g, '-'))"
+                                                v-bind:checked="substitute.isDefault" />
+                                            <label class="form-check-label" v-bind:for="ingredient.title.toLowerCase().replace(/ /g, '-').concat('-', substitute.title.toLowerCase().replace(/ /g, '-'))">
+                                                {{substitute.title}}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12" v-if="ingredient.sizes.length > 1">
+                                        <h6 class="mt-2"><strong>Sizes</strong></h6>
+                                        <div class="form-check form-check-inline" v-for="size in ingredient.sizes">
+                                            <input class="form-check-input" type="radio" value="" v-on:change="changeSizeIngredient(ingredient.id, ingredient.type, size)" v-bind:name="ingredient.title.toLowerCase().replace(/ /g, '-').concat('-', 'size')" v-bind:id="ingredient.title.toLowerCase().replace(/ /g, '-').concat('-', 'size', '-', size)" v-bind:checked="size === ingredient.defaultSize" />
+                                            <label class="form-check-label" v-bind:for="ingredient.title.toLowerCase().replace(/ /g, '-').concat('-', 'size', '-', size)">
+                                                {{size}}{{ingredient.unit}}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 mt-3" v-if="recipe.customize && recipe.customize.addOns">
+                        <h2>Add-Ons</h2>
+                        <div class="card text-dark bg-light mb-3" v-for="ingredient in recipe.customize.addOns">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" v-on:change="addRemoveAddOn(ingredient.id, ingredient.type, ingredient.sizes[0])" v-bind:name="ingredient.title.toLowerCase().replace(/ /g, '-')" v-bind:id="ingredient.title.toLowerCase().replace(/ /g, '-')" />
+                                            <label class="form-check-label" v-bind:for="ingredient.title.toLowerCase().replace(/ /g, '-')">
+                                                {{ingredient.title}} ({{ingredient.defaultSize}}{{ingredient.unit}})
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-check form-check-inline" v-for="size in ingredient.sizes">
+                                            <input class="form-check-input" type="radio" v-on:change="changeAddOnSize(ingredient.id, ingredient.type, size)" v-bind:name="ingredient.title.toLowerCase().replace(/ /g, '-').concat('-', 'size')" v-bind:id="ingredient.title.toLowerCase().replace(/ /g, '-').concat('-', 'size', '-', size)" v-bind:checked="size === ingredient.defaultSize" />
+                                            <label class="form-check-label" v-bind:for="ingredient.title.toLowerCase().replace(/ /g, '-').concat('-', 'size', '-', size)">
+                                                {{size}}{{ingredient.unit}}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 mt-3" v-if="recipe.customize && recipe.customize.combos">
+                        <h2>Combos</h2>
+                        <div class="row row-cols-auto mx-0">
+                            <div class="col border rounded bg-secondary text-white mb-1 pt-1 text-center" v-for="combo in recipe.customize.combos">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" v-bind:value="combo.code" v-model="changes.combos" v-on:change="calculateRecipe()" v-bind:name="combo.title.toLowerCase().replace(/ /g, '-')" v-bind:id="combo.title.toLowerCase().replace(/ /g, '-')" />
+                                    <label class="form-check-label" v-bind:for="combo.title.toLowerCase().replace(/ /g, '-')">
+                                        {{combo.title}} ({{combo.price}})
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 mt-3">
+                        <div class="card text-dark bg-light mb-3" v-for="(label, index) in labels">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h6><strong>Day</strong>
+                                            <button class="btn btn-danger text-white float-end" v-if="index != 0" v-on:click.prevent="deleteLabelRow(index)">
+                                                <i class="far fa-trash-alt"></i>
+                                            </button>
+                                        </h6>
+                                        <div class="form-check form-check-inline" v-for="day in recipe.itemDays">
+                                            <input class="form-check-input" type="radio" v-model="labels[index].day" v-bind:value="day.id" v-bind:name="'days' + '-' + index" v-bind:id="'day-' + index + '-' + day.id" v-bind:checked="day.id == null" />
+                                            <label class="form-check-label" v-bind:for="'day-' + index + '-' + day.id">
+                                                {{day.title}}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <h6 class="mt-2"><strong>Meal</strong></h6>
+                                        <div class="form-check form-check-inline" v-for="meal in meals">
+                                            <input class="form-check-input" type="radio" v-model="labels[index].meal" v-bind:value="meal" v-bind:name="'meals' + '-' + index" v-bind:id="'meal-' + index + '-' + meal.toLowerCase()" v-bind:checked="meal == 'None'" />
+                                            <label class="form-check-label" v-bind:for="'meal-' + index + '-' + meal.toLowerCase()">
+                                                {{meal}}
+                                            </label>
+                                        </div>
+                                        <input type="text" class="form-control" v-if="labels[index].meal == 'Custom'" v-model="labels[index].customMeal" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" type="button" name="button" v-on:click.prevent="addLabelRow()">Add Label</button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                <button class="btn btn-primary" v-on:click.prevent="addItemToInvoice()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

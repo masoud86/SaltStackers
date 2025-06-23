@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
+    <title>@Global.ProjectTitle - @ViewData["Title"]</title>
+    <link href="~/dist/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/dist/css/public.css" rel="stylesheet" />
+    <partial name="_Favicons" />
+</head>
+<body class="rtl">
+    <div class="content">
+        <div class="logo-wrapper mb-5">
+            <a asp-area="" asp-controller="Home" asp-action="Index">
+                <img src="~/dist/assets/images/logo-with-name.svg" alt="SaltStackers" />
+            </a>
+        </div>
+        @RenderBody()
+    </div>
+    <script src="~/dist/js/public.js?ver=@ConfigHelper.CurrentVersion()"></script>
+</body>
+</html>

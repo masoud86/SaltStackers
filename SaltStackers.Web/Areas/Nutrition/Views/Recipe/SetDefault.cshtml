@@ -1,0 +1,16 @@
+﻿@model SaltStackers.Application.ViewModels.Nutrition.RecipeDto
+@{
+    ViewData["Title"] = string.Format(Global.SetDefault, Health.Recipe);
+    ViewData["Icon"] = Icon.Nutrition;
+}
+
+<div asp-validation-summary="All" class="alert alert-danger"></div>
+<form asp-area="Nutrition" asp-controller="Recipe" asp-action="SetDefault" asp-route-id="@Model.Id" asp-route-foodId="@Model.FoodId" method="post">
+    <p>@(Html.Raw(string.Format(Global.SetDefaultConfirm, Health.Food, Model.Title)))</p>
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <button type="submit" class="btn btn-sm btn-danger text-white">@string.Format(Global.SetDefault, Health.Recipe)</button>
+            <a asp-area="Nutrition" asp-controller="Recipe" asp-action="Index" asp-route-foodId="@Model.FoodId" class="btn btn-sm btn-outline-secondary">@Global.Cancel</a>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,320 @@
+﻿@model SaltStackers.Application.ViewModels.Membership.UserDto
+@{
+    ViewData["Title"] = Model.Name;
+    Layout = "_LayoutEmpty";
+}
+<input type="hidden" id="user-id" ref="userId" value="@Model.Id" />
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header">
+                <div class="card-menu d-flex justify-content-between d-print-none">
+                    <div class="d-flex align-items-center">
+                        Latest invoices
+                    </div>
+                    <div>
+                        @* <a asp-area="Financial" asp-controller="Invoice" asp-action="Create" asp-route-id="@Model.Id" class="btn btn-sm btn-outline-primary shadow-none me-1">Create Invoice</a> *@
+                        <button class="btn btn-sm btn-outline-primary shadow-none me-1" v-on:click.prevent="openCreateInvoiceModal()">Create Invoice</button>
+                        <a asp-area="Financial" asp-controller="Invoice" asp-action="Index" asp-route-ownerId="@Model.Id" class="btn btn-sm btn-outline-success shadow-none">Show All</a>
+                        <button class="btn btn-sm btn-link text-decoration-none link-primary shadow-none" v-on:click.prevent="getInvoices()"><i class="fas fa-fw fa-redo"></i></button>
+                        <button class="btn btn-sm btn-link text-decoration-none link-primary shadow-none expand-card"><i class="fas fa-fw fa-expand"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body pt-0">
+                <div class="d-flex justify-content-center" v-if="loading.invoices">
+                    <div class="spinner-grow" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <div class="table-responsive" v-cloak>
+                    <table class="table table-hover table-striped align-middle" v-if="invoices && !loading.invoices">
+                        <thead>
+                            <tr>
+                                <th>Invoice No.</th>
+                                <th>Status</th>
+                                <th>Total</th>
+                                <th>Created</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="invoice in invoices" v-bind:class="{'table-success': invoice.status == 3, 'table-warning': invoice.status == 2}">
+                                <td><a :href="'/financial/invoice/details/' + invoice.id">#{{invoice.invoiceNumber}}</a></td>
+                                <td>{{invoice.statusTitle}}</td>
+                                <td>${{invoice.totalPrice.toFixed(2)}}</td>
+                                <td>{{invoice.createDateTimeHumanized}}</td>
+                            </tr>
+                            <tr v-if="invoices.length == 0">
+                                <td colspan="4">Empty</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="card mb-4">
+            <div class="card-header">
+                <div class="card-menu d-flex justify-content-end d-print-none">
+                    <div>
+                        <button class="btn btn-sm btn-outline-success shadow-none" v-on:click.prevent="openUploader()">Upload File</button>
+                        <button class="btn btn-sm btn-link text-decoration-none link-primary shadow-none" v-on:click.prevent="getUserFiles()"><i class="fas fa-fw fa-redo"></i></button>
+                        <button class="btn btn-sm btn-link text-decoration-none link-primary shadow-none expand-card"><i class="fas fa-fw fa-expand"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body pt-0">
+                <div class="d-flex justify-content-center" v-if="loading.files">
+                    <div class="spinner-grow" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <template v-else>
+                    <table class="table table-striped">
+                        <tbody>
+                            <tr v-for="file in userFiles">
+                                <td>{{file.label}}</td>
+                                <td>{{file.fileName}}</td>
+                                <td>{{file.sizeLabel}}</td>
+                                <td>{{file.uploadDateTimeHumanized}}</td>
+                                <td><a :href="file.url"><i class="fas fa-cloud-download-alt"></i></a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </template>
+            </div>
+        </div>
+        <div class="card mb-4">
+            <div class="card-header">
+                <div class="card-menu d-flex justify-content-between d-print-none">
+                    <div class="d-flex align-items-center">
+                        Total Debts: ${{totalDebt.toFixed(2)}}
+                    </div>
+                    <div>
+                        <button class="btn btn-sm btn-outline-success shadow-none" v-on:click.prevent="openAddUserDebtModal()"><i class="fas fa-fw fa-plus"></i></button>
+                        <button class="btn btn-sm btn-link text-decoration-none link-primary shadow-none" v-on:click.prevent="getDebts()"><i class="fas fa-fw fa-redo"></i></button>
+                        <button class="btn btn-sm btn-link text-decoration-none link-primary shadow-none expand-card"><i class="fas fa-fw fa-expand"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body pt-0">
+                <div class="d-flex justify-content-center" v-if="loading.debt">
+                    <div class="spinner-grow" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <div class="table-responsive" v-cloak>
+                    <table class="table table-hover table-striped align-middle" v-if="debts && !loading.debt">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Amount</th>
+                                <th>Created</th>
+                                <th>Status</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="debt in debts">
+                                <td>{{debt.title}}</td>
+                                <td>${{debt.amount.toFixed(2)}}</td>
+                                <td>{{debt.createDateTimeHumanized}}</td>
+                                <td v-if="debt.isPaid" :title="debt.payDateTimeHumanized">
+                                    <a v-bind:href="'/Financial/Invoice/Details/' + debt.invoiceId" class="link-success">
+                                        <i class="fas fa-check me-1"></i>#{{debt.invoiceNumber}}
+                                    </a>
+                                </td>
+                                <td class="text-warning" v-else><i class="fas fa-hourglass-half me-1"></i>Waiting</td>
+                                <td><button class="btn btn-sm btn-link text-decoration-none link-danger" v-on:click.prevent="deleteDebt(debt.id)" v-if="!debt.isPaid"><i class="fa-fw @Icon.ButtonDelete"></i></button></td>
+                            </tr>
+                            <tr v-if="debts.length == 0">
+                                <td colspan="6">Empty</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-center" v-if="loading.userDetails">
+                    <div class="spinner-grow" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <template v-if="user">
+                    <h1>
+                        <span class="fa-stack small">
+                            <i class="fas fa-circle fa-stack-2x" v-bind:class="{ 'text-danger': user.isBlocked, 'text-success': !user.isBlocked }"></i>
+                            <i class="fas fa-user fa-stack-1x fa-inverse"></i>
+                        </span>
+                        {{user.name}}
+                    </h1>
+                    <hr />
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item pe-0 d-flex justify-content-between align-items-center" title="Role">
+                            <span class="user-select-all"><i class="fas fa-fw me-1 fa-shield-alt"></i>{{user.role}}</span>
+                            <button class="btn btn-link" v-on:click.prevent="openSwitchRoleModal()"><i class="fas fa-pen"></i></button>
+                        </li>
+                        <li class="list-group-item pe-0 d-flex justify-content-between align-items-center" title="Username">
+                            <span class="user-select-all"><i class="fas fa-fw me-1 fa-user"></i>{{user.username}}</span>
+                            <button class="btn btn-link" v-on:click.prevent="openEditUsernameModal()"><i class="fas fa-pen"></i></button>
+                        </li>
+                        <li class="list-group-item pe-0 d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-fw me-1 fa-info"></i>About</span>
+                            <button class="btn btn-link" v-on:click.prevent="openAboutModal()"><i class="fas fa-pen"></i></button>
+                        </li>
+                        <li class="list-group-item" v-bind:title="user.emailConfirmed ? 'Email (Verified)' : 'Email (Not Verified)'">
+                            <span class="user-select-all"><i class="fas fa-fw me-1 fa-at" v-bind:class="{ 'text-success': user.emailConfirmed, 'text-danger': !user.emailConfirmed }"></i>{{user.email}}</span>
+                        </li>
+                        <li class="list-group-item" v-bind:title="user.phoneNumberConfirmed ? 'Phone Number (Verified)' : 'Phone Number (Not Verified)'">
+                            <span class="user-select-all"><i class="fas fa-fw me-1 fa-phone" v-bind:class="{ 'text-success': user.phoneNumberConfirmed, 'text-danger': !user.phoneNumberConfirmed }"></i>{{user.phoneNumber}}</span>
+                        </li>
+                        <li class="list-group-item" v-if="user.birthDate">
+                            <span class="user-select-all"><i class="fas fa-fw me-1 fa-birthday-cake"></i>{{user.birthDateFormatted}}</span>
+                        </li>
+                        <li class="list-group-item" v-if="user.bloodType">
+                            <span class="user-select-all"><i class="fas fa-fw me-1 fa-tint"></i>{{user.bloodTypeTitle}}</span>
+                        </li>
+                        <li class="list-group-item" v-if="user.gender">
+                            <span class="user-select-all"><i class="fas fa-fw me-1 fa-venus-mars"></i>{{user.genderTitle}}</span>
+                        </li>
+                    </ul>
+                </template>
+            </div>
+        </div>
+        <div class="card mb-4">
+            <div class="card-body">
+                <h4>Links</h4>
+                <hr />
+                <div class="list-group list-group-flush">
+                    <a class="list-group-item list-group-item-action" asp-area="Nutrition" asp-controller="Recipe" asp-action="Index" asp-route-user="@Model.Id">
+                        <i class="fas fa-fw me-1 fa-utensils"></i>Recipes
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="card mb-4">
+            <div class="card-header">
+                <div class="card-menu d-flex justify-content-end d-print-none">
+                    <div>
+                        <a asp-area="Financial" asp-controller="Wallet" asp-action="Index" asp-route-userId="@Model.Id" class="btn btn-sm btn-outline-success shadow-none">View Wallet</a>
+                        <button class="btn btn-sm btn-link text-decoration-none link-primary shadow-none" v-on:click.prevent="getWalletBalance()"><i class="fas fa-fw fa-redo"></i></button>
+                        <button class="btn btn-sm btn-link text-decoration-none link-primary shadow-none expand-card"><i class="fas fa-fw fa-expand"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body pt-0">
+                <div class="d-flex justify-content-center" v-if="loading.wallet">
+                    <div class="spinner-grow" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <h3 class="mt-3 mb-0" v-if="!loading.wallet && walletBalance != null">Wallet Balance: ${{walletBalance.toFixed(2)}}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="upload-file" tabindex="-1" aria-labelledby="uploadFileModalLabel" aria-hidden="true" ref="uploadFileModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="uploadFileModalLabel">Upload File</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="drag-drop"></div>
+                <div id="status-bar" class="mt-1"></div>
+                <div id="progress-bar"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="switch-role" tabindex="-1" aria-labelledby="switchRoleModalLabel" aria-hidden="true" ref="switchRoleModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="switchRoleModalLabel">Switch Role</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex justify-content-center" v-if="loading.roles">
+                    <div class="spinner-grow" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <table class="table table-hover table-striped align-middle" v-else>
+                    <tbody>
+                        <tr v-for="role in roles">
+                            <td><i class="fas fa-lock me-1" v-if="role.isLocked"></i>{{role.displayName}}</td>
+                            <td>{{role.name}}</td>
+                            <td>{{role.description}}</td>
+                            <td>
+                                <button class="btn btn-sm btn-primary" v-on:click.prevent="switchRole(role)" v-if="user && role.name != user.role">Switch</button>
+                                <span v-else>Current Role</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="create-invoice" tabindex="-1" aria-labelledby="createInvoiceModalLabel" aria-hidden="true" ref="createInvoiceModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="createInvoiceModalLabel">Create Invoice</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex justify-content-center" v-if="loading.kitchens">
+                    <div class="spinner-grow" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <table class="table table-hover table-striped align-middle" v-else>
+                    <tbody>
+                        <tr v-for="kitchen in kitchens.items">
+                            <td>{{kitchen.title}}</td>
+                            <td class="text-end">
+                                <button class="btn btn-sm btn-primary" v-on:click.prevent="createInvoice(kitchen.id)">Create</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="about-modal" tabindex="-1" aria-labelledby="about-modal-label" aria-hidden="true" ref="aboutModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="about-modal-label">About</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="col mb-3">
+                    <ckeditor :editor="editor" v-model="aboutTemp" :config="editorConfig"></ckeditor>
+                </div>
+                <div class="col">
+                    <button type="button" class="btn btn-primary me-1" v-on:click.prevent="editAbout()">Save</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@await Html.PartialAsync("~/Views/Shared/Membership/_AddUserDebt.cshtml")
+@await Html.PartialAsync("~/Views/Shared/Membership/_EditUsername.cshtml")
+@section scripts {
+    <script src="~/dist/js/page/Membership/user-profile.js?ver=@ConfigHelper.CurrentVersion()"></script>
+}

@@ -1,0 +1,44 @@
+﻿<div class="modal fade" id="edit-recipe-modal" ref="editRecipeModal" aria-hidden="true" aria-labelledby="edit-recipe-label" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="edit-recipe-label">Edit Recipe</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" v-if="recipe">
+                <div class="row mb-3">
+                    <div class="form-floating col-md-6 mb-3 mb-sm-0">
+                        <input id="title" class="form-control" placeholder="Title" v-model="recipe.title" />
+                        <label for="title">Title</label>
+                    </div>
+                    <div class="form-floating col-md-6 mb-3 mb-sm-0">
+                        <select id="recipe-type" class="form-select" placeholder="Recipe Type" v-model="recipe.recipeType"
+                            asp-items="@(Html.GetEnumSelectList<RecipeType>())"></select>
+                        <label for="recipe-type">Recipe Type</label>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="form-floating col-md-6">
+                        <select id="stringency" class="form-select" placeholder="Stringency" v-model="recipe.stringency"
+                            asp-items="@(Html.GetEnumSelectList<SkillLevel>())"></select>
+                        <label for="stringency">Stringency</label>
+                    </div>
+                    <div class="form-floating col-md-6 mb-3 mb-sm-0">
+                        <input id="preparing-duration" class="form-control" placeholder="Preparing Duration" v-model="recipe.preparingDuration" />
+                        <label for="preparing-duration">Preparing Duration (min)</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-floating col-md-12 mb-3 mb-sm-0">
+                        <textarea id="description" rows="5" class="form-control" placeholder="Description" v-model="recipe.description"></textarea>
+                        <label for="description">Description</label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                <button class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

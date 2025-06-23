@@ -1,0 +1,12 @@
+﻿@{
+    ViewData["Title"] = Global.Settings;
+    ViewData["Icon"] = Icon.Settings;
+}
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4">
+    <div class="col mb-4" condition="@User.HasPermission("Configuration|Settings|Recaptcha")">
+        <card-link url="@Url.ActionLink("Recaptcha", "Settings", new { Area = "Configuration" })" title="Google reCaptcha" description="Google reCaptcha Settings" icon="fab fa-google"></card-link>
+    </div>
+    <div class="col mb-4" condition="@User.HasPermission("Configuration|Settings|RecurringJobs")">
+        <card-link url="@Url.ActionLink("RecurringJobs", "Settings", new { Area = "Configuration" })" title="Recurring Jobs" description="Manage Recurring Jobs" icon="fas fa-server"></card-link>
+    </div>
+</div>

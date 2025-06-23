@@ -1,0 +1,15 @@
+﻿@{
+    ViewData["Title"] = Security.Membership;
+    ViewData["Icon"] = Icon.User;
+}
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4">
+    <div class="col mb-4" condition="@User.HasPermission("Membership|User|Index")">
+        <card-link url="/Membership/User/Index" title="@Security.Users" icon="fas fa-users" description="All users"></card-link>
+    </div>
+    <div class="col mb-4" condition="@User.HasPermission("Membership|Role|Index")">
+        <card-link url="/Membership/Role/Index" title="@Security.Roles" icon="fas fa-shield-alt" description="All roles"></card-link>
+    </div>
+    @*<div class="col mb-4" condition="@User.HasPermission("Membership|Customer|Index")">
+        <card-link url="/Membership/Customer/Index" title="@Global.Customers" icon="fas fa-user-friends"></card-link>
+    </div>*@
+</div>

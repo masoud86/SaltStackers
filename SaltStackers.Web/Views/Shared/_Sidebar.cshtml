@@ -1,0 +1,91 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using SaltStackers.Domain.Models.Membership
+@inject Microsoft.AspNetCore.Identity.SignInManager<AspNetUser> SignInManager
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+
+<nav id="sidebar" class="sidebar-wrapper d-print-none">
+    <div class="sidebar-content position-relative">
+        <div class="sidebar-header">
+            <div class="user-pic text-center">
+                <img class="img-responsive rounded-circle" src="~/dist/assets/images/user.png" width="60" alt="User picture" />
+            </div>
+            <div class="user-info text-center">
+                <strong class="user-name">@User.Name()</strong>
+                <span class="user-role">@User.RoleDisplayName()</span>
+                <a id="logoff" class="text-danger" href="#">
+                    @Html.AntiForgeryToken()Logout
+                </a>
+            </div>
+        </div>
+        <div class="sidebar-menu">
+            <ul>
+                <li>
+                    <a asp-area="" asp-controller="Home" asp-action="Dashboard">
+                        <i class="fa-fw @Icon.Dashboard"></i>
+                        <span>@Global.Dashboard</span>
+                    </a>
+                </li>
+                <li condition="@User.HasPermission("Membership|Home|Index")">
+                    <a asp-area="Membership" asp-controller="Home" asp-action="Index">
+                        <i class="fa-fw @Icon.User"></i>
+                        <span>@Security.Membership</span>
+                    </a>
+                </li>
+                <li condition="@User.HasPermission("Nutrition|Home|Index")">
+                    <a asp-area="Nutrition" asp-controller="Home" asp-action="Index">
+                        <i class="fa-fw @Icon.Nutrition"></i>
+                        <span>Nutrition</span>
+                    </a>
+                </li>
+                <li condition="@User.HasPermission("Store|Home|Index")">
+                    <a asp-area="Store" asp-controller="Home" asp-action="Index">
+                        <i class="fa-fw @Icon.Store"></i>
+                        <span>Store</span>
+                    </a>
+                </li>
+                @*<li condition="@User.HasPermission("Admin|Report|Index")">
+                    <a asp-area="Admin" asp-controller="Report" asp-action="Index">
+                        <i class="fa-fw @Icon.Report"></i>
+                        <span>@Global.Reports</span>
+                    </a>
+                </li>*@
+                <li condition="@User.HasPermission("Monitoring|Home|Index")">
+                    <a asp-area="Monitoring" asp-controller="Home" asp-action="Index">
+                        <i class="fa-fw @Icon.Monitoring"></i>
+                        <span>@Global.Monitoring</span>
+                    </a>
+                </li>
+                <li condition="@User.HasPermission("Configuration|Settings|Index")">
+                    <a asp-area="Configuration" asp-controller="Settings" asp-action="Index">
+                        <i class="fa-fw @Icon.Settings"></i>
+                        <span>@Global.Settings</span>
+                    </a>
+                </li>
+                <li condition="@User.HasPermission("Financial|Home|Index")">
+                    <a asp-area="Financial" asp-controller="Home" asp-action="Index">
+                        <i class="fa-fw @Icon.Accounting"></i>
+                        <span>Financial</span>
+                    </a>
+                </li>
+                <li condition="@User.HasPermission("Operation|Home|Index")">
+                    <a asp-area="Operation" asp-controller="Home" asp-action="Index">
+                        <i class="fa-fw @Icon.Operation"></i>
+                        <span>Operation</span>
+                    </a>
+                </li>
+                <li condition="@User.HasPermission("Partnership|Home|Index")">
+                    <a asp-area="Partnership" asp-controller="Home" asp-action="Index">
+                        <i class="fa-fw @Icon.Partnership"></i>
+                        <span>Partnership</span>
+                    </a>
+                </li>
+                <li>
+                    <a asp-area="" asp-controller="Home" asp-action="ReleaseNotes" class="text-muted">
+                        <small>@Global.Version @Configuration.GetSection("Version").Value</small>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

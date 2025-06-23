@@ -1,0 +1,157 @@
+@model int
+@{
+    ViewData["Title"] = "Edit Package";
+}
+<input type="hidden" id="package-id" name="package-id" value="@Model" ref="packageId" />
+<div class="col-12">
+    <div class="card">
+        <div class="card-body">
+            <div class="row" v-if="package">
+                <div class="col-5">
+                    <h5 class="user-select-all">{{package.title}}</h5>
+                    <h6 class="text-black-50 user-select-all">{{package.subtitle}}</h6>
+                    <p class="text-black-50 user-select-all mb-0">{{package.code}}</p>
+                </div>
+                <div class="col">
+                    <h6 class="user-select-all" :title="package.createDateTimeLocal">{{package.createDateTimeHumanized}}
+                    </h6>
+                </div>
+                <div class="col">
+                    <h5><span class="user-select-all">${{package.price}}</span></h5>
+                </div>
+                <div class="col">
+                    <template v-if="package.isActive"><i class="fas fa-circle me-1 text-success"></i> Active</template>
+                    <template v-else><i class="fas fa-circle me-1 text-warning"></i> Deactivate</template>
+                </div>
+                <div class="col">
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-sm btn-primary" v-on:click.prevent="openCreatePackageForm()">Edit</button>
+                        <button class="btn btn-sm btn-primary" v-on:click.prevent="openAddGroupForm()">Add Group</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="accordion mt-4" v-if="package && package.groups">
+    <div class="accordion-item" v-for="group in package.groups">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                :data-bs-target="'#group' + group.id" aria-expanded="false" aria-controls="panelsStayOpen-collapseOne">
+                {{group.title}}
+            </button>
+        </h2>
+        <div :id="'group' + group.id" class="accordion-collapse collapse">
+            <div class="accordion-body">
+                <div class="d-flex justify-content-end mb-3">
+                    <button class="btn btn-sm btn-primary me-1" v-on:click.prevent="openSelectRecipeModal(group.id)">Add Item</button>
+                    <button class="btn btn-sm btn-primary" v-on:click.prevent="openEditGroup(group.id)">Edit Group</button>
+                </div>
+                <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4" v-if="group.items">
+                    <div class="col" v-for="item in group.items">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">{{item.label}}</h5>
+                                <p class="card-text">{{item.recipe.food.title}}<template v-if="item.recipe.title"> ({{item.recipe.title}})</template></p>
+                                <button class="btn btn-sm btn-primary me-1" v-on:click.prevent="openEditItem(item.id, group.id)">Edit</button>
+                                <button class="btn btn-sm btn-danger" v-on:click.prevent="deleteItem(item.id)">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="create-package-modal" tabindex="-1" aria-labelledby="create-package-modal-label"
+    aria-hidden="true" ref="packageCreateModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="create-package-modal-label">Add New Package</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" v-if="packageTemp">
+                <div class="col mb-3">
+                    <label for="Title" class="form-label">Title</label>
+                    <input id="Title" class="form-control" v-model="packageTemp.title" />
+                </div>
+                <div class="col mb-3">
+                    <label for="Subtitle" class="form-label">Subtitle</label>
+                    <input id="Subtitle" class="form-control" v-model="packageTemp.subtitle" />
+                </div>
+                <div class="col mb-3">
+                    <label for="Price" class="form-label">Price</label>
+                    <input id="Price" class="form-control" v-model="packageTemp.price" />
+                </div>
+                <div class="col mb-3">
+                    <label for="Description" class="form-label"></label>
+                    <ckeditor :editor="editor" v-model="packageTemp.description" :config="editorConfig"></ckeditor>
+                    <input type="hidden" id="Description" ref="recipeDetailsTemp" />
+                </div>
+                <div class="col">
+                    <button type="button" class="btn btn-primary me-1" v-on:click.prevent="editPackage()">Edit</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="group-modal" tabindex="-1" aria-labelledby="group-modal-label" aria-hidden="true"
+    ref="groupModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="group-modal-label">
+                    <template v-if="groupEdit.mode">Edit Group</template>
+                    <template v-else>Add New Group</template>
+                </h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="col mb-3">
+                    <label for="Title" class="form-label">Title</label>
+                    <input id="Title" class="form-control" v-model="groupTitle" />
+                </div>
+                <div class="col">
+                    <button type="button" class="btn btn-primary me-1" v-if="groupEdit.mode"
+                        v-on:click.prevent="editGroup()">Edit</button>
+                    <button type="button" class="btn btn-primary me-1" v-else
+                        v-on:click.prevent="addGroup()">Add</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="group-item-modal" tabindex="-1" aria-labelledby="group-item-modal-label" aria-hidden="true"
+    ref="groupItemModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="group-modal-label" v-if="selectedRecipe">
+                    {{selectedRecipe.food.title}}<template v-if="selectedRecipe.title">
+                        ({{selectedRecipe.title}})</template>
+                </h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="col mb-3">
+                    <label for="label" class="form-label">Label</label>
+                    <input id="label" class="form-control" v-model="itemLabel" />
+                </div>
+                <div class="col">
+                    <button type="button" class="btn btn-primary me-1" v-if="itemEditMode"
+                        v-on:click.prevent="editItem()">Edit</button>
+                    <button type="button" class="btn btn-primary me-1" v-else
+                        v-on:click.prevent="addItem()">Add</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@await Html.PartialAsync("~/Views/Shared/Nutrition/_SelectRecipe.cshtml")
+@section scripts {
+    <script src="~/dist/js/page/nutrition/package-edit.js?ver=@ConfigHelper.CurrentVersion()"></script>
+}

@@ -1,0 +1,65 @@
+﻿@model SaltStackers.Application.ViewModels.Customer.Customers
+@{
+    ViewData["Title"] = Global.Customers;
+    ViewData["Icon"] = Icon.User;
+    Model.PageUrl = Url.Action("Index");
+}
+@section actions {
+<a href="#collapse-filters" class="mx-1" data-bs-toggle="collapse" aria-expanded="false"><i class="fas fa-fw fa-filter"></i></a>
+}
+@*@section mainAction {
+<a asp-area="Membership" asp-controller="Customer" asp-action="Create" class="btn btn-sm btn-primary">@string.Format(Global.AddNew, Global.Customer)</a>
+}*@
+<partial name="_Filters" />
+<div class="table-responsive">
+    <table class="table table-hover table-striped align-middle">
+        <thead>
+            <tr>
+                <th>Full Name</th>
+                <th>Email</th>
+                <th>Phone Number</th>
+                <th>Created at</th>
+                <th>Features</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Items.Any())
+            {
+                foreach (var item in Model.Items)
+                {
+                    <tr>
+                        <td>
+                            <a asp-area="Membership" asp-controller="Customer" asp-action="Edit" asp-route-id="@item.Id">
+                                @item.Name
+                            </a>
+                        </td>
+                        <td>@item.Email</td>
+                        <td>@item.PhoneNumber</td>
+                        <td class="text-center">@item.CreateDateTimeLocal</td>
+                        <td style="font-size: 22px">
+                            @if(!string.IsNullOrEmpty(item.StripeId))
+                            {
+                                <i class="fab fa-fw fa-stripe text-success" title="Registered in Stripe: @item.StripeId"></i>
+                            }
+                            @if (item.PhoneNumberConfirmed)
+                            {
+                                <i class="fas fa-fw fa-mobile-alt text-success" title="Phone Number Confirmed"></i>
+                            }
+                            @if (item.EmailConfirmed)
+                            {
+                                <i class="fas fa-fw fa-envelope text-success" title="Email Confirmed"></i>
+                            }
+                        </td>
+                        <td class="text-center">
+                            <a asp-area="Membership" asp-controller="Customer" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-link text-decoration-none link-primary"><i class="me-1 fa-fw @Icon.ButtonEdit"></i>@Global.Edit</a>
+                            <a asp-area="Membership" asp-controller="Customer" asp-action="CreateAddress" asp-route-userId="@item.Id" class="btn btn-sm btn-link text-decoration-none link-secondary"><i class="me-1 fa-fw fas fa-map"></i>Add Address</a>
+                            <a asp-area="Financial" asp-controller="Invoice" asp-action="Create" asp-route-id="@item.Id" class="btn btn-sm btn-link text-decoration-none link-secondary"><i class="me-1 fa-fw @Icon.Accounting"></i>Create Invoice</a>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    <partial name="_PagingInfo" model="Model" />
+</div>

@@ -1,0 +1,35 @@
+﻿.form-control {
+    &:focus {
+        box-shadow: none;
+    }
+}
+
+.breadcrumb-item + .breadcrumb-item {
+    @include left-right(padding-left, .5rem, padding-right, 0);
+
+    &:before {
+        @include left-right(padding-right, .5rem, padding-left, .5rem);
+        float: none;
+    }
+}
+
+.btn {
+    font-size: fontSize(0) !important;
+}
+
+.form-control {
+    font-size: fontSize(0);
+}
+
+.custom-file-label:after {
+    right: 0;
+}
+
+.form-control-plaintext {
+    font-size: fontSize(0);
+}
+
+.rtl .form-check-input, [dir="rtl"] .form-check-input {
+    margin-right: inherit;
+    margin-left: inherit;
+}

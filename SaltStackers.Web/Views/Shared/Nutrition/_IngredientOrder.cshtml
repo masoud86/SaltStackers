@@ -1,0 +1,20 @@
+﻿<div class="modal fade" id="ingredient-order-modal" ref="ingredientOrderModal" aria-hidden="true" aria-labelledby="ingredient-order-label" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ingredient-order-label">Change Order</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" v-if="selectedIngredient">
+                <div class="col-6">
+                    <label for="order" class="form-label">Order</label>
+                    <input id="order" class="form-control" placeholder="Order" v-model="selectedIngredient.order" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                <button class="btn btn-primary" v-on:click.prevent="changeOrder()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

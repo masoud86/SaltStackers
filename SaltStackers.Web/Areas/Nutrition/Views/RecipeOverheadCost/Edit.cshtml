@@ -1,0 +1,33 @@
+﻿@model SaltStackers.Application.ViewModels.Nutrition.RecipeOverheadCostDto
+@{
+    ViewData["Title"] = string.Format(Global.AddNew, Global.RecipeOverheadCost);
+    ViewData["Icon"] = Icon.OverheadCost;
+}
+
+<div asp-validation-summary="All" class="alert alert-danger"></div>
+<form asp-area="Nutrition" asp-controller="RecipeOverheadCost" asp-action="Edit" asp-route-recipeId="@Model.RecipeId" method="post">
+    @Html.AntiForgeryToken()
+    <div class="row mb-3">
+        <div class="form-floating col-md-6 mb-3 mb-sm-0">
+            <select asp-for="OverheadCostId" class="form-select" asp-items="@(new SelectList(Model.OverheadCosts, "Id", "Title"))">
+                <option disabled selected>--- SELECT ---</option>
+            </select>
+            <label asp-for="OverheadCostId"></label>
+            <span asp-validation-for="OverheadCostId" class="text-danger"></span>
+        </div>
+        <div class="form-floating col-md-6 mb-3 mb-sm-0">
+            <input asp-for="Amount" class="form-control" placeholder="Amount" autocomplete="given-name" />
+            <label asp-for="Amount"></label>
+            <span asp-validation-for="Amount" class="text-danger"></span>
+        </div>
+    </div>
+
+   
+
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <button type="submit" class="btn btn-primary">@string.Format(Global.EditRecipeOverheadCost, Global.RecipeOverheadCost)</button>
+            <a asp-area="Nutrition" asp-controller="RecipeOverheadCost" asp-action="Index" asp-route-recipeId="@Model.RecipeId" class="btn btn-outline-secondary">@Global.Cancel</a>
+        </div>
+    </div>
+</form>

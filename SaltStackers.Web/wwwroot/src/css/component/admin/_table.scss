@@ -1,0 +1,17 @@
+.action-cell {
+    a {
+        @include left-right(margin-right, 5px, margin-left, 5px);
+
+        &:last-of-type {
+            @include left-right(margin-right, 0, margin-left, 0);
+        }
+    }
+}
+
+div.dataTables_wrapper div.dataTables_filter {
+    text-align: leftRight(right, left) !important;
+}
+
+div.dataTables_wrapper div.dataTables_filter input {
+    @include left-right(margin-left, 0.5em, margin-right, 0.5em);
+}

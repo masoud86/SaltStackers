@@ -1,0 +1,36 @@
+﻿@model SaltStackers.Application.ViewModels.Nutrition.Tags
+@{
+    ViewData["Title"] = "Tags";
+    Model.PageUrl = Url.Action("Index", "Tag", new { Area = "Nutrition" });
+}
+@section actions {
+    <a href="#collapse-filters" class="mx-1" data-bs-toggle="collapse" aria-expanded="false"><i class="fas fa-fw fa-filter"></i></a>
+}
+<partial name="_Filters" />
+<table class="table table-hover table-striped">
+    <thead>
+        <tr>
+            <th>Order</th>
+            <th>Title</th>
+            <th>Permalink</th>
+            <th>Category</th>
+            <th>Last modified at</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Items.Any())
+        {
+            foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>@item.Order</td>
+                    <td>@item.Title</td>
+                    <td>@item.Permalink</td>
+                    <td>@item.Category</td>
+                    <td>@item.EditDateTimeLocal</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+<partial name="_PagingInfo" model="Model" />

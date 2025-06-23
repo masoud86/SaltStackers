@@ -1,0 +1,47 @@
+﻿<div class="modal fade" id="manage-amounts-modal" ref="manageAmountsModal" aria-hidden="true" aria-labelledby="manage-amounts-label" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="manage-amounts-label" v-if="selectedIngredient">Other Amounts ({{selectedIngredient.title}}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-hover table-striped align-middle">
+                    <thead>
+                        <tr>
+                            <th>Amount</th>
+                            <th>Process Fee</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="otherAmount in otherAmounts">
+                            <td>{{otherAmount.amount}}</td>
+                            <td>{{otherAmount.processFee.toFixed(2)}} CAD</td>
+                            <td>
+                                <button class="btn btn-sm btn-link text-decoration-none link-primary" title="Edit" v-on:click.prevent="selectOtherAmount(otherAmount)"><i class="@Icon.ButtonEdit"></i></button>
+                                <button class="btn btn-sm btn-link text-decoration-none link-danger" title="Delete" v-on:click.prevent="deleteOtherAmount(otherAmount)"><i class="@Icon.ButtonDelete"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="row mb-3" v-if="otherAmount">
+                    <div class="form-floating col-md-6 mb-3 mb-sm-0">
+                        <input id="other-amount-amount" class="form-control" placeholder="Amount" v-model="otherAmount.amount" />
+                        <label for="other-amount-amount">Amount</label>
+                    </div>
+                    <div class="form-floating col-md-6 mb-3 mb-sm-0">
+                        <input id="other-amount-process-fee" class="form-control" placeholder="Process Fee" v-model="otherAmount.processFee" />
+                        <label for="other-amount-process-fee">Process Fee</label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" v-if="otherAmount">
+                <button v-if="otherAmount.id" class="btn btn-primary" v-on:click.prevent="editOtherAmount()" v-bind:disabled="otherAmount && (!otherAmount.amount || !otherAmount.processFee)">Edit Amount</button>
+                <button v-else class="btn btn-primary" v-on:click.prevent="createNewOtherAmount()" v-bind:disabled="otherAmount && (!otherAmount.amount || !otherAmount.processFee)" v-else>Add Amount</button>
+                <button v-if="otherAmount.id" class="btn btn-outline-secondary" v-on:click.prevent="cancelOtherAmount()">Cancel</button>
+                <button v-else class="btn btn-outline-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

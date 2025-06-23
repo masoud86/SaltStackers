@@ -1,0 +1,125 @@
+﻿@model SaltStackers.Application.ViewModels.General.Dashboard
+@{
+    ViewData["Title"] = Global.Dashboard;
+    Layout = "_LayoutEmpty";
+}
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-body">
+                <a asp-area="Membership" asp-controller="User" asp-action="Index" class="btn btn-link text-center text-decoration-none link-secondary">
+                    <i class="fas fa-fw fa-2x fa-users"></i>
+                    <small class="d-block mt-2">Users</small>
+                </a>
+                <a asp-area="Nutrition" asp-controller="Food" asp-action="Index" class="btn btn-link text-center text-decoration-none link-secondary">
+                    <i class="fas fa-fw fa-2x fa-fish"></i>
+                    <small class="d-block mt-2">Foods</small>
+                </a>
+                <a asp-area="Nutrition" asp-controller="Recipe" asp-action="Index" class="btn btn-link text-center text-decoration-none link-secondary">
+                    <i class="fas fa-fw fa-2x fa-utensils"></i>
+                    <small class="d-block mt-2">Recipes</small>
+                </a>
+                <a asp-area="Nutrition" asp-controller="Ingredient" asp-action="Index" class="btn btn-link text-center text-decoration-none link-secondary">
+                    <i class="fas fa-fw fa-2x fa-carrot"></i>
+                    <small class="d-block mt-2">Ingredients</small>
+                </a>
+                <a asp-area="Nutrition" asp-controller="Package" asp-action="Index" class="btn btn-link text-center text-decoration-none link-secondary">
+                    <i class="fas fa-fw fa-2x fa-box"></i>
+                    <small class="d-block mt-2">Packages</small>
+                </a>
+                <a asp-area="Operation" asp-controller="Kitchen" asp-action="Index" class="btn btn-link text-center text-decoration-none link-secondary">
+                    <i class="fas fa-fw fa-2x fa-sink"></i>
+                    <small class="d-block mt-2">Kitchens</small>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card mb-4">
+            <div class="card-body">
+                <span class="fa-stack fa-2x position-absolute top-0 end-0 mt-2 me-1">
+                    <i class="fas fa-circle fa-stack-2x text-warning text-opacity-25"></i>
+                    <i class="fas fa-sink fa-stack-1x fa-inverse text-warning"></i>
+                </span>
+                <h5><a asp-area="Nutrition" asp-controller="Recipe" asp-action="Index" class="stretched-link link-secondary">Kitchens</a></h5>
+                <h1 class="fs-1 text-secondary">@Model.KitchensCount</h1>
+                <small class="card-text text-black-50">Cover all Greater Vancouver</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card mb-4">
+            <div class="card-body">
+                <span class="fa-stack fa-2x position-absolute top-0 end-0 mt-2 me-1">
+                    <i class="fas fa-circle fa-stack-2x text-primary text-opacity-25"></i>
+                    <i class="fas fa-utensils fa-stack-1x fa-inverse text-primary"></i>
+                </span>
+                <h5><a asp-area="Nutrition" asp-controller="Recipe" asp-action="Index" class="stretched-link link-secondary">Foods</a></h5>
+                <h1 class="fs-1 text-secondary">@Model.FoodsCount</h1>
+                <small class="card-text text-black-50">More than @Model.RecipesCount recipes</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card mb-4">
+            <div class="card-body">
+                <span class="fa-stack fa-2x position-absolute top-0 end-0 mt-2 me-1">
+                    <i class="fas fa-circle fa-stack-2x text-primary text-opacity-25"></i>
+                    <i class="fas fa-utensils fa-stack-1x fa-inverse text-primary"></i>
+                </span>
+                <h5><a asp-area="Nutrition" asp-controller="Recipe" asp-action="Index" class="stretched-link link-secondary">Foods</a></h5>
+                <h1 class="fs-1 text-secondary">@Model.FoodsCount</h1>
+                <small class="card-text text-black-50">More than @Model.RecipesCount recipes</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card mb-4">
+            <div class="card-body">
+                <span class="fa-stack fa-2x position-absolute top-0 end-0 mt-2 me-1">
+                    <i class="fas fa-circle fa-stack-2x text-primary text-opacity-25"></i>
+                    <i class="fas fa-utensils fa-stack-1x fa-inverse text-primary"></i>
+                </span>
+                <h5><a asp-area="Nutrition" asp-controller="Recipe" asp-action="Index" class="stretched-link link-secondary">Foods</a></h5>
+                <h1 class="fs-1 text-secondary">@Model.FoodsCount</h1>
+                <small class="card-text text-black-50">More than @Model.RecipesCount recipes</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                Kitchens
+            </div>
+            <div class="card-body pt-0">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped align-middle">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Kitchens != null && Model.Kitchens.Any())
+                            {
+                                foreach (var item in Model.Kitchens)
+                                {
+                                    <tr>
+                                        <td>
+                                            <a asp-area="Operation" asp-controller="Kitchen" asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-link text-decoration-none link-primary fw-bold">@item.Title</a>
+                                        </td>
+                                        <td><i class="fas fa-circle text-@item.StatusColor" title="@(EnumHelper<PartnerStatus>.GetDisplayValue(item.Status))"></i></td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts {
+    <script src="~/dist/js/page/dashboard.js?ver=@ConfigHelper.CurrentVersion()"></script>
+}

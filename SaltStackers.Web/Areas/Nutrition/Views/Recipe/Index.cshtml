@@ -1,0 +1,110 @@
+﻿@model SaltStackers.Application.ViewModels.Nutrition.Recipes
+@{
+    var title = Global.Recipes;
+    if (Model.Food != null)
+    {
+        title += $" ({Model.Food.Title})";
+    }
+    ViewData["Title"] = title;
+    ViewData["Icon"] = Icon.Nutrition;
+    Model.PageUrl = Url.Action("Index");
+}
+@section actions {
+    <a href="#collapse-filters" class="mx-1" data-bs-toggle="collapse" aria-expanded="false"><i class="fas fa-fw fa-filter"></i></a>
+}
+@await Html.PartialAsync("~/Views/Shared/Nutrition/_RecipeFilters.cshtml")
+<div class="alert alert-secondary d-flex align-items-center justify-content-between mb-3" condition="Model.Food != null">
+    <strong>Food: <a asp-area="Nutrition" asp-controller="Food" asp-action="Edit" asp-route-id="@Model.FoodId">@Model.Food?.Title</a></strong>
+    <span>
+        <a asp-area="Nutrition" asp-controller="Recipe" asp-action="Create" asp-route-foodId="@Model.FoodId" class="btn btn-sm btn-primary">Add new recipe to @Model.Food?.Title</a>
+        <a class="btn btn-sm btn-secondary" asp-area="Nutrition" asp-controller="Food" asp-action="Index">
+            Back to foods
+        </a>
+    </span>
+</div>
+<div class="table-responsive">
+    <table class="table table-hover table-striped align-middle">
+        <thead>
+            <tr>
+                <th>Recipe</th>
+                <th>Price</th>
+                <th>Categories</th>
+                <th>Attributes</th>
+                <th>Personal Chef</th>
+                <th>Create Time</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Items.Any())
+            {
+                foreach (var item in Model.Items)
+                {
+                    var itemTitle = item.Food?.Title;
+                    if (!string.IsNullOrWhiteSpace(item.Title))
+                    {
+                        itemTitle += $" ({item.Title})";
+                    }
+                    <tr class="@(item.IsActive ? "" : "table-danger")">
+                        <td>
+                            <a asp-action="Details" asp-route-id="@item.Id">
+                                <strong>@itemTitle</strong><small class="text-muted d-block">@item.Code</small>
+                            </a>
+                            <strong class="text-warning" condition="item.RecipeOwners != null && item.RecipeOwners.Any()">
+                                @if (item.RecipeOwners.Count() == 1)
+                                {
+                                    var owner = item.RecipeOwners.FirstOrDefault().User;
+                                    <i class="fas fa-user me-1"></i>
+                                    @owner.Name
+                                    <a asp-area="Nutrition" asp-controller="Recipe" asp-action="Index" asp-route-user="@owner.Id" class="d-inline-block text-decoration-none link-secondary ms-1" title="@string.Format("Filter {0}'s recipes", owner.Name)"><i class="fas fa-sm fa-filter"></i></a>
+                                }
+                                else
+                                {
+                                    <i class="fas fa-users me-1"></i> @:Multiple Owners
+                                }
+                            </strong>
+                        </td>
+                        <td>$@item.Price.ToString("0.00")</td>
+                        <td>
+                            @if (item.RecipeDiets != null && item.RecipeDiets.Any())
+                            {
+                                foreach (var category in item.RecipeDiets.OrderByDescending(p => p.Diet.IsActive))
+                                {
+                                    <span condition="@category.Diet.IsActive" class="badge me-1 bg-secondary text-white fw-normal" title="Active">@category.Diet?.Title</span>
+                                    <span condition="@(!category.Diet.IsActive)" class="badge me-1 bg-secondary-subtle text-dark fw-normal" title="Deactivate">@category.Diet?.Title</span>
+                                }
+                            }
+                            <span condition="item.RecipeOwners != null && item.RecipeOwners.Any()" class="badge me-1 bg-warning text-white fw-normal" title="Personal">Me</span>
+                        </td>
+                        <td>
+                            <p class="mb-1">
+                                <span class="badge me-1 bg-secondary text-white" title="Type">@item.RecipeTypeTitle</span>
+                                <span class="badge me-1 bg-secondary text-white" title="Skill Level">@item.SkillTitle</span>
+                                <span class="badge me-1 bg-secondary text-white" title="Packaging Time">@item.PackagingTime min</span>
+                                <span condition="item.RecipeSize == RecipeSize.Default" class="badge me-1 bg-secondary-subtle text-dark" title="Size">@item.RecipeSizeTitle</span>
+                                <span condition="item.RecipeSize == RecipeSize.Family" class="badge me-1 bg-warning text-white" title="Size">@item.RecipeSizeTitle</span>
+                            </p>
+                            <span condition="item.MainMenu" class="badge me-1 bg-primary text-white">Main Menu</span>
+                            <span condition="item.DefaultInCategory" class="badge me-1 bg-secondary-subtle text-dark">Default in Category</span>
+                            <span condition="item.IsRoutine" class="badge me-1 bg-info-subtle text-dark">Routine</span>
+                            <span condition="item.IsOption" class="badge me-1 bg-warning-subtle text-dark">Option</span>
+                            <span condition="item.IsNew" class="badge me-1 bg-danger-subtle text-dark">New</span>
+                            <span condition="item.IsTwoStepCooking" class="badge me-1 bg-danger-subtle text-dark">Two-Step Cooking</span>
+                            <span condition="item.IsActive" class="badge me-1 bg-success-subtle text-dark">Active</span>
+                            <span condition="!item.IsActive" class="badge me-1 bg-danger text-white">Deactivate</span>
+                            <span condition="item.Priority.HasValue" class="badge me-1 bg-danger text-white" title="Priority">@item.Priority.Value</span>
+                        </td>
+                        <td>
+                            <span condition="!string.IsNullOrEmpty(item.PersonalChefId)">@item.PersonalChef.Name</span>
+                        </td>
+                        <td><span title="@item.CreateDateTimeLocal">@item.CreateDateTimeHumanized</span></td>
+                        <td>
+                            <a asp-area="Nutrition" asp-controller="Recipe" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-link text-decoration-none link-primary"><i class="me-1 fa-fw @Icon.ButtonEdit"></i>@Global.Edit</a>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+<partial name="_PagingInfo" model="Model" />
