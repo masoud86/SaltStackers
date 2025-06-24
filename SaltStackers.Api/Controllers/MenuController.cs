@@ -31,53 +31,6 @@ namespace SaltStackers.Api.Controllers
         }
 
         /// <summary>
-        /// All available filter in menu
-        /// </summary>
-        /// <remarks>
-        /// Diets / Tags / Prep Days
-        /// </remarks>
-        /// <returns>Menu filter options</returns>
-        /// <response code="200">Successful operation</response>
-        /// <response code="400">Bad Request</response>
-        [HttpGet]
-        [Route("[action]")]
-        [AllowAnonymous]
-        [Authorize(AuthenticationSchemes = "Bearer")]
-        public async Task<ActionResult<MenuFilters>> Filters()
-        {
-            var diets = await _nutritionService.GetDietsApiAsync(new DietFilters { PageSize = 20, Sort = "Order", Direction = "Asc" });
-            var tags = await _nutritionService.GetTagsApiAsync(new TagFilters { PageSize = 50, Sort = "Order", Direction = "Asc" });
-
-            if (User != null)
-            {
-                var claim = User.Claims.FirstOrDefault(p => p.Type == "name");
-                if (claim != null)
-                {
-                    var username = claim.Value;
-                    var user = await _userManager.FindByNameAsync(username);
-                    var personalDiet = new DietApi
-                    {
-                        Permalink = "personal",
-                        Title = user?.Name,
-                        Icon = "personal-diet.svg",
-                        IconUrl = $"{_configuration.GetSection("PublicUrl").Get<string>()}/diet/personal-diet.svg",
-                        Color = "#903E97",
-                        Description = "",
-                        EmptyDescription = "How come you don't have your healthy personal chef? Let us make your meals tailored to your health goals, lifestyle & palate."
-                    };
-                    diets.Insert(0, personalDiet);
-                }
-            }
-
-            return new OkObjectResult(new MenuFilters
-            {
-                Diets = diets,
-                Tags = tags,
-                CookingDays = new List<Application.ViewModels.Base.Day>()
-            });
-        }
-
-        /// <summary>
         /// All menu items
         /// </summary>
         /// <remarks>
@@ -198,21 +151,6 @@ namespace SaltStackers.Api.Controllers
         public async Task<ActionResult<RecipeVariables>> CalculateRecipe(string code, RecipeChanges changes)
         {
             return new OkObjectResult(await _nutritionService.CalculateRecipeAsync(code, changes, true));
-        }
-
-        /// <summary>
-        /// Recipe Changes History
-        /// </summary>
-        /// <param name="code">Recipe Code</param>
-        /// <returns>History of Changes</returns>
-        [HttpGet]
-        [Route("[action]")]
-        [Authorize(AuthenticationSchemes = "Bearer")]
-        public async Task<ActionResult<List<RecipeHistory>>> RecipeHistory(string code)
-        {
-            var username = User.Claims.First(p => p.Type == "name").Value;
-            var user = await _userManager.FindByNameAsync(username);
-            return new OkObjectResult(await _nutritionService.GetRecipeHistoriesAsync(code, user.Id));
         }
     }
 }

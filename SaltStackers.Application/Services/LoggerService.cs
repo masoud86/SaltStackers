@@ -1,10 +1,8 @@
-﻿using SaltStackers.Application.Interfaces;
+﻿using Newtonsoft.Json;
+using SaltStackers.Application.Interfaces;
 using SaltStackers.Application.ViewModels.Log;
 using SaltStackers.Domain.Interfaces;
 using SaltStackers.Domain.Models.Log;
-using Newtonsoft.Json;
-using System;
-using System.Threading.Tasks;
 
 namespace SaltStackers.Application.Services
 {

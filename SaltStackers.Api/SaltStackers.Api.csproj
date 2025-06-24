@@ -26,13 +26,4 @@
     <ProjectReference Include="..\SaltStackers.IoC\SaltStackers.IoC.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="Email\Membership\ResetPassword.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Email\Membership\Welcome.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>

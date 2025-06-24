@@ -12,29 +12,14 @@ namespace SaltStackers.Application.Services
     public partial class OperationService : IOperationService
     {
         private readonly IMapper _iMapper;
-        private readonly ILogService _logService;
         private readonly IOperationRepository _operationRepository;
-        private readonly IFinancialRepository _financialRepository;
-        private readonly ICustomerRepository _customerRepository;
-        private readonly INutritionService _nutritionService;
-        private readonly INutritionRepository _nutritionRepository;
-        private readonly IApplicationRepository _applicationRepository;
 
-        public OperationService(IOperationRepository operationRepository, ILogService logService,
-            IFinancialRepository financialRepository, ICustomerRepository customerRepository,
-            INutritionService nutritionService, INutritionRepository nutritionRepository,
-            IApplicationRepository applicationRepository)
+        public OperationService(IOperationRepository operationRepository)
         {
             var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
 
             _iMapper = config.CreateMapper();
             _operationRepository = operationRepository;
-            _logService = logService;
-            _financialRepository = financialRepository;
-            _customerRepository = customerRepository;
-            _nutritionService = nutritionService;
-            _nutritionRepository = nutritionRepository;
-            _applicationRepository = applicationRepository;
         }
 
         #region Overhead Cost

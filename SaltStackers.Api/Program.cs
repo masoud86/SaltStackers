@@ -1,14 +1,14 @@
-using SaltStackers.Application.Custom;
-using SaltStackers.Application.Extensions;
-using SaltStackers.Data.Context;
-using SaltStackers.Domain.Models.Membership;
-using SaltStackers.IoC;
 using Hangfire;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using SaltStackers.Application.Custom;
+using SaltStackers.Application.Extensions;
+using SaltStackers.Data.Context;
+using SaltStackers.Domain.Models.Membership;
+using SaltStackers.IoC;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
@@ -128,7 +128,7 @@ public class Program
         {
             opt.WatchPageUsername = "loguser";
             opt.WatchPagePassword = "123456";
-            opt.Blacklist = "Customer/Login,Customer/Register,Customer/Refresh,Payment/PayByCard";
+            opt.Blacklist = "";
         });
         app.UseEndpoints(endpoints =>
         {

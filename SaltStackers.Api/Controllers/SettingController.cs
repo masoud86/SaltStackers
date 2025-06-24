@@ -1,12 +1,9 @@
-﻿using SaltStackers.Application.Interfaces;
-using SaltStackers.Application.ViewModels.Log;
-using SaltStackers.Application.ViewModels.Operation.Kitchen;
-using SaltStackers.Application.ViewModels.Settings;
-using SaltStackers.Application.ViewModels.Settings.Alert;
-using SaltStackers.Domain.Models.Membership;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using SaltStackers.Application.Interfaces;
+using SaltStackers.Application.ViewModels.Operation.Kitchen;
+using SaltStackers.Domain.Models.Membership;
 
 namespace SaltStackers.Api.Controllers;
 
@@ -36,83 +33,6 @@ public class SettingController : ControllerBase
         _operationService = operationService;
         _userManager = userManager;
         _logService = logService;
-    }
-
-    /// <summary>
-    /// Get customer app current version
-    /// </summary>
-    /// <returns>Current Version</returns>
-    [HttpGet]
-    [Route("[action]")]
-    public ActionResult<string> GetCurrentVersion()
-    {
-        return new OkObjectResult(_applicationService.GetSetting("CustomerAppVersion"));
-    }
-
-    /// <summary>
-    /// Temporary API to set customer app current version
-    /// </summary>
-    /// <param name="version">Current Version</param>
-    /// <returns>Ok Response</returns>
-    [HttpGet]
-    [Route("[action]")]
-    public ActionResult SetCurrentVersion(string version)
-    {
-        _applicationService.SetSettings("CustomerAppVersion", version);
-        _applicationService.UpdateCache();
-        return Ok();
-    }
-
-    /// <summary>
-    /// Get Zones List
-    /// </summary>
-    /// <param name="kitchenId">Kitchen ID</param>
-    /// <returns>List of Zones</returns>
-    [HttpGet]
-    [Route("[action]")]
-    public async Task<ActionResult<List<ZoneApi>>> GetZones(int kitchenId)
-    {
-        return new OkObjectResult(await _applicationService.GetZonesByKitchenAsync(kitchenId));
-    }
-
-    /// <summary>
-    /// Get Alerts List
-    /// </summary>
-    /// <returns>List of alerts</returns>
-    [HttpGet]
-    [Route("[action]")]
-    [AllowAnonymous]
-    [Authorize(AuthenticationSchemes = "Bearer")]
-    public async Task<ActionResult<List<AlertApi>>> GetAlerts()
-    {
-        string? userId = null;
-        if (User != null)
-        {
-            var claim = User.Claims.FirstOrDefault(p => p.Type == "name");
-            if (claim != null)
-            {
-                var username = claim.Value;
-                var user = await _userManager.FindByNameAsync(username);
-            }
-        }
-
-        return new OkObjectResult(await _applicationService.GetAlertsAsync(userId));
-    }
-
-    /// <summary>
-    /// Set Alert to Seen
-    /// </summary>
-    /// <param name="alertId">Alert Id</param>
-    /// <returns>Action Result</returns>
-    [HttpPost]
-    [Route("[action]")]
-    [Authorize(AuthenticationSchemes = "Bearer")]
-    public async Task<ActionResult> AlertSeen(int alertId)
-    {
-        var username = User.Claims.First(p => p.Type == "name").Value;
-        var user = await _userManager.FindByNameAsync(username);
-        await _applicationService.SeenAlertAsync(user.Id, alertId);
-        return Ok();
     }
 
     /// <summary>
