@@ -17,6 +17,7 @@ using System.Globalization;
 
 namespace SaltStackers.Web.Controllers;
 
+[ApiExplorerSettings(IgnoreApi = true)]
 public class HomeController : BaseController
 {
     private readonly ILogService _logService;
@@ -147,6 +148,7 @@ public class HomeController : BaseController
     [HttpGet]
     public ViewResult Errors() => View("Error");
 
+    [HttpGet]
     [Route("404")]
     public IActionResult PageNotFound()
     {

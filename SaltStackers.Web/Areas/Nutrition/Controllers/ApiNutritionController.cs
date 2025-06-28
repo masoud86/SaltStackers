@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 namespace SaltStackers.Web.Areas.Nutrition.Controllers
 {
     [ApiController]
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class ApiNutritionController : ControllerBase
     {
         private readonly INutritionService _nutritionService;

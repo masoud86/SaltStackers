@@ -11,6 +11,7 @@ using SaltStackers.Web.Helpers;
 namespace SaltStackers.Web.Areas.Membership.Controllers
 {
     [ApiController]
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class ApiMembershipController : ControllerBase
     {
         private readonly IMembershipService _membershipService;

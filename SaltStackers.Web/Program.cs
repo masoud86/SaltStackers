@@ -1,12 +1,17 @@
+using Hangfire;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors.Infrastructure;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
+using SaltStackers.Application.Extensions;
 using SaltStackers.Data.Context;
 using SaltStackers.IoC;
 using SaltStackers.Web.Helpers;
 using SaltStackers.Web.Helpers.Configurations;
 using SaltStackers.Web.Helpers.Services;
-using Hangfire;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
+using System.Reflection;
+using System.Text;
 using WatchDog;
 using WatchDog.src.Enums;
 
@@ -18,7 +23,19 @@ namespace SaltStackers.Web
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            var version = builder.Configuration.GetSection("Version").Get<string>();
             var appConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+            var corsOrigins = builder.Configuration.GetSection("CorsOrigins").Get<string[]>();
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidIssuer = builder.Configuration.GetSection("Swagger:ValidIssuer").Get<string>(),
+                ValidAudience = builder.Configuration.GetSection("Swagger:ValidAudience").Get<string>(),
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("Swagger:IssuerSigningKey").Get<string>())),
+                ValidateIssuer = builder.Configuration.GetSection("Swagger:ValidateIssuer").Get<bool>(),
+                ValidateAudience = builder.Configuration.GetSection("Swagger:ValidateAudience").Get<bool>(),
+                ValidateLifetime = builder.Configuration.GetSection("Swagger:ValidateLifetime").Get<bool>(),
+                ClockSkew = TimeSpan.Zero
+            };
 
 
             builder.Services.AddHangfire(configuration => configuration
@@ -28,6 +45,7 @@ namespace SaltStackers.Web
                 .UseSqlServerStorage(appConnectionString)
                 .UseSerializerSettings(new JsonSerializerSettings() { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }));
             builder.Services.AddHangfireServer();
+            builder.Services.AddApplicationSwagger(tokenValidationParameters);
 
             builder.Services.AddControllersWithViews(options =>
             {
@@ -40,6 +58,10 @@ namespace SaltStackers.Web
 
             CultureHelper.SetCulture(CultureHelper.DefaultCulture);
 
+            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+
+            builder.Services.AddApplicationSwaggerGen(version, xmlPath);
             builder.Services.AddMemoryCache();
             builder.Services.AddTransient<IUtilities, Utilities>();
             builder.Services.AddScoped<IAuthorizationHandler, DynamicPermissionHandler>();
@@ -55,6 +77,17 @@ namespace SaltStackers.Web
                 googleOptions.ClientSecret = "sdjkflksdjf;asdf";
             });
 
+            var corsBuilder = new CorsPolicyBuilder();
+            corsBuilder.AllowAnyHeader();
+            corsBuilder.AllowAnyMethod();
+            corsBuilder.WithOrigins(corsOrigins);
+            corsBuilder.AllowCredentials();
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("ApiCorsPolicy", corsBuilder.Build());
+            });
+
             builder.Services.AddWatchDogServices(opt =>
             {
                 opt.SetExternalDbConnString = appConnectionString;
@@ -63,6 +96,13 @@ namespace SaltStackers.Web
             builder.Logging.AddWatchDogLogger();
 
             var app = builder.Build();
+
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v2/swagger.json", $"SaltStackers {version}"));
+            }
 
             app.UseWatchDogExceptionLogger();
 

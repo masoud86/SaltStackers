@@ -9,6 +9,7 @@ using SaltStackers.Web.Helpers;
 namespace SaltStackers.Web.Areas.Financial.Controllers
 {
     [ApiController]
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class ApiOperationController : ControllerBase
     {
         private readonly IOperationService _operationService;

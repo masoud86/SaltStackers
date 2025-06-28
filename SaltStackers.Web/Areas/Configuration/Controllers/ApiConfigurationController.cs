@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace SaltStackers.Web.Areas.Configuration.Controllers
 {
     [ApiController]
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class ApiConfigurationController : ControllerBase
     {
         private readonly INutritionService _nutritionService;
