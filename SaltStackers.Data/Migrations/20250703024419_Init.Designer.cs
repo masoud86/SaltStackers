@@ -12,7 +12,7 @@ using SaltStackers.Data.Context;
 namespace SaltStackers.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250623072640_Init")]
+    [Migration("20250703024419_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -767,11 +767,6 @@ namespace SaltStackers.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CookingCategoryId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(1);
-
                     b.Property<DateTime>("EditDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
@@ -789,8 +784,6 @@ namespace SaltStackers.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CookingCategoryId");
 
                     b.HasIndex("UnitId");
 
@@ -830,32 +823,6 @@ namespace SaltStackers.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("IngredientCategories", "nutrition");
-                });
-
-            modelBuilder.Entity("SaltStackers.Domain.Models.Nutrition.IngredientCookingCategory", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("EditDateTime")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasDefaultValueSql("GETUTCDATE()");
-
-                    b.Property<int>("Order")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("IngredientCookingCategories", "nutrition");
                 });
 
             modelBuilder.Entity("SaltStackers.Domain.Models.Nutrition.IngredientSubCategory", b =>
@@ -1648,6 +1615,147 @@ namespace SaltStackers.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Units", "nutrition");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Category = "Solids",
+                            ConversionFactor = 1.0,
+                            HasCustomConversionFactor = false,
+                            Sign = "g",
+                            Title = "Gram"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Category = "Solids",
+                            ConversionFactor = 1000.0,
+                            HasCustomConversionFactor = false,
+                            Sign = "kg",
+                            Title = "Kilogram"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Category = "Solids",
+                            ConversionFactor = 454.0,
+                            HasCustomConversionFactor = false,
+                            Sign = "lb",
+                            Title = "Pound"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Category = "Solids",
+                            ConversionFactor = 28.350000000000001,
+                            HasCustomConversionFactor = false,
+                            Sign = "oz",
+                            Title = "Ounce"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Category = "Solids",
+                            HasCustomConversionFactor = true,
+                            Sign = "cup",
+                            Title = "Cup"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Category = "Solids",
+                            HasCustomConversionFactor = true,
+                            Sign = "tbsp",
+                            Title = "Table Spoon"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Category = "Solids",
+                            HasCustomConversionFactor = true,
+                            Sign = "tsp",
+                            Title = "Tea Spoon"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Category = "Solids",
+                            HasCustomConversionFactor = true,
+                            Sign = "ea",
+                            Title = "Each"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Category = "Solids",
+                            ConversionFactor = 0.34999999999999998,
+                            HasCustomConversionFactor = false,
+                            Sign = "pinch",
+                            Title = "Pinch"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Category = "Solids",
+                            HasCustomConversionFactor = true,
+                            Sign = "bunch",
+                            Title = "Bunch"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Category = "Liquids",
+                            ConversionFactor = 1.0,
+                            HasCustomConversionFactor = false,
+                            Sign = "ml",
+                            Title = "Milliliter"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Category = "Liquids",
+                            ConversionFactor = 1000.0,
+                            HasCustomConversionFactor = false,
+                            Sign = "l",
+                            Title = "Liter"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Category = "Liquids",
+                            ConversionFactor = 29.57,
+                            HasCustomConversionFactor = false,
+                            Sign = "fl-oz",
+                            Title = "Fluid Ounce"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Category = "Liquids",
+                            ConversionFactor = 236.56,
+                            HasCustomConversionFactor = false,
+                            Sign = "cup",
+                            Title = "Cup"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Category = "Liquids",
+                            ConversionFactor = 15.0,
+                            HasCustomConversionFactor = false,
+                            Sign = "tbsp",
+                            Title = "Table Spoon"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Category = "Liquids",
+                            ConversionFactor = 5.0,
+                            HasCustomConversionFactor = false,
+                            Sign = "tsp",
+                            Title = "Tea Spoon"
+                        });
                 });
 
             modelBuilder.Entity("SaltStackers.Domain.Models.Operation.Kitchen", b =>
@@ -2307,18 +2415,10 @@ namespace SaltStackers.Data.Migrations
 
             modelBuilder.Entity("SaltStackers.Domain.Models.Nutrition.Ingredient", b =>
                 {
-                    b.HasOne("SaltStackers.Domain.Models.Nutrition.IngredientCookingCategory", "CookingCategory")
-                        .WithMany("Ingredients")
-                        .HasForeignKey("CookingCategoryId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("SaltStackers.Domain.Models.Nutrition.Unit", "Unit")
                         .WithMany()
                         .HasForeignKey("UnitId")
                         .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("CookingCategory");
 
                     b.Navigation("Unit");
                 });
@@ -2721,11 +2821,6 @@ namespace SaltStackers.Data.Migrations
             modelBuilder.Entity("SaltStackers.Domain.Models.Nutrition.IngredientCategory", b =>
                 {
                     b.Navigation("IngredientSubCategories");
-                });
-
-            modelBuilder.Entity("SaltStackers.Domain.Models.Nutrition.IngredientCookingCategory", b =>
-                {
-                    b.Navigation("Ingredients");
                 });
 
             modelBuilder.Entity("SaltStackers.Domain.Models.Nutrition.IngredientSubCategory", b =>

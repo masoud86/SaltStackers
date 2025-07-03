@@ -15,7 +15,6 @@ namespace SaltStackers.Data.Mapping.Nutrition
             builder.Property(p => p.Title).HasMaxLength(200).IsRequired();
             builder.Property(p => p.OrderPeriod).IsRequired();
             builder.Property(p => p.UnitId).IsRequired(false);
-            builder.Property(p => p.CookingCategoryId).IsRequired().HasDefaultValue(1);
             builder.Property(p => p.EditDateTime).HasColumnType("datetime")
                 .HasDefaultValueSql("GETUTCDATE()").ValueGeneratedOnAdd().IsRequired();
 

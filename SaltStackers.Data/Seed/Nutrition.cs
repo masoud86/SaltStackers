@@ -15,9 +15,9 @@ namespace SaltStackers.Data.Seed
 
         public void Nutrition()
         {
-            Kitchens();
+            //Kitchens();
 
-            //Unit();
+            Unit();
 
             //Diets();
 
@@ -30,8 +30,6 @@ namespace SaltStackers.Data.Seed
             //Foods();
 
             //Combos();
-
-            //IngredientCookingCategory();
         }
 
         private void Kitchens()
@@ -76,128 +74,112 @@ namespace SaltStackers.Data.Seed
         {
             _units = new List<Unit>
             {
-                new Unit
-                {
+                new() {
                     Id = 1,
                     Category = "Solids",
                     Title = "Gram",
                     Sign = "g",
                     ConversionFactor = 1
                 },
-                new Unit
-                {
+                new() {
                     Id = 2,
                     Category = "Solids",
                     Title = "Kilogram",
                     Sign = "kg",
                     ConversionFactor = 1000
                 },
-                new Unit
-                {
+                new() {
                     Id = 3,
                     Category = "Solids",
                     Title = "Pound",
                     Sign = "lb",
                     ConversionFactor = 454
                 },
-                new Unit
-                {
+                new() {
                     Id = 4,
                     Category = "Solids",
                     Title = "Ounce",
                     Sign = "oz",
                     ConversionFactor = 28.35
                 },
-                new Unit
-                {
+                new() {
                     Id = 5,
                     Category = "Solids",
                     Title = "Cup",
                     Sign = "cup",
                     HasCustomConversionFactor = true
                 },
-                new Unit
-                {
+                new() {
                     Id = 6,
                     Category = "Solids",
                     Title = "Table Spoon",
                     Sign = "tbsp",
                     HasCustomConversionFactor = true
                 },
-                new Unit
-                {
+                new() {
                     Id = 7,
                     Category = "Solids",
                     Title = "Tea Spoon",
                     Sign = "tsp",
                     HasCustomConversionFactor = true
                 },
-                new Unit
-                {
+                new() {
                     Id = 8,
                     Category = "Solids",
                     Title = "Each",
                     Sign = "ea",
                     HasCustomConversionFactor = true
                 },
-                new Unit
-                {
+                new() {
                     Id = 9,
                     Category = "Solids",
                     Title = "Pinch",
                     Sign = "pinch",
                     ConversionFactor = 0.35
                 },
-                new Unit
-                {
+                new() {
                     Id = 10,
                     Category = "Solids",
                     Title = "Bunch",
                     Sign = "bunch",
                     HasCustomConversionFactor = true
                 },
-                new Unit
-                {
+                new() {
                     Id = 11,
                     Category = "Liquids",
                     Title = "Milliliter",
                     Sign = "ml",
                     ConversionFactor = 1
                 },
-                new Unit
-                {
+                new() {
                     Id = 12,
                     Category = "Liquids",
                     Title = "Liter",
                     Sign = "l",
                     ConversionFactor = 1000
                 },
-                new Unit
-                {
+                new() {
                     Id = 13,
                     Category = "Liquids",
                     Title = "Fluid Ounce",
                     Sign = "fl-oz",
                     ConversionFactor = 29.57
                 },
-                new Unit
-                {
+                new() {
                     Id = 14,
                     Category = "Liquids",
                     Title = "Cup",
                     Sign = "cup",
                     ConversionFactor = 236.56
                 },
-                new Unit
-                {
+                new() {
                     Id = 15,
                     Category = "Liquids",
                     Title = "Table Spoon",
                     Sign = "tbsp",
                     ConversionFactor = 15
                 },
-                new Unit
-                {
+                new() {
                     Id = 16,
                     Category = "Liquids",
                     Title = "Tea Spoon",
@@ -3541,51 +3523,6 @@ namespace SaltStackers.Data.Seed
                         Title = "Banana Protein Muffins",
                         Description = "Banana Protein Muffins are the perfect healthy breakfast or snack that fills you up!",
                         Price = (decimal)4.50
-                    }
-                }
-            );
-        }
-
-        private void IngredientCookingCategory()
-        {
-            _modelBuilder.Entity<IngredientCookingCategory>().HasData(
-                new List<IngredientCookingCategory>
-                {
-                    new IngredientCookingCategory
-                    {
-                        Id = 1,
-                        Title = "Other",
-                        Order = 1
-                    },
-                    new IngredientCookingCategory
-                    {
-                        Id = 2,
-                        Title = "Poultry",
-                        Order = 2
-                    },
-                    new IngredientCookingCategory
-                    {
-                        Id = 3,
-                        Title = "Red Meat",
-                        Order = 3
-                    },
-                    new IngredientCookingCategory
-                    {
-                        Id = 4,
-                        Title = "Sea Food",
-                        Order = 4
-                    },
-                    new IngredientCookingCategory
-                    {
-                        Id = 5,
-                        Title = "Carb",
-                        Order = 5
-                    },
-                    new IngredientCookingCategory
-                    {
-                        Id = 6,
-                        Title = "Vegetable",
-                        Order = 6
                     }
                 }
             );

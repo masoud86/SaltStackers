@@ -578,7 +578,6 @@ namespace SaltStackers.Data.Repository
         {
             return await _context.Ingredients
                 .Include(p => p.Unit)
-                .Include(p => p.CookingCategory)
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
 
@@ -592,7 +591,6 @@ namespace SaltStackers.Data.Repository
         {
             return await _context.Ingredients
                 .Include(p => p.Unit)
-                .Include(p => p.CookingCategory)
                 .Where(predicate)
                 .AsNoTrackingWithIdentityResolution()
                 .OrderBy(sortBy + " " + direction)
@@ -1322,18 +1320,6 @@ namespace SaltStackers.Data.Repository
             _context.RecipeOwners.Remove(model);
             var modified = await _context.SaveChangesAsync();
             return modified > 0;
-        }
-
-        public async Task<List<IngredientCookingCategory>> GetCookingCategoriesAsync()
-        {
-            return await _context.IngredientCookingCategories
-                .OrderBy(p => p.Order).ToListAsync();
-        }
-
-        public async Task<IngredientCookingCategory?> GetCookingCategoryAsync(int id)
-        {
-            return await _context.IngredientCookingCategories
-                .FirstOrDefaultAsync(p => p.Id == id);
         }
     }
 }

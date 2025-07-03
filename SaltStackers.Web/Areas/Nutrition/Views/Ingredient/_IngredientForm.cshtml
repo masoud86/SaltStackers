@@ -16,8 +16,3 @@
     <select asp-for="OrderPeriod" class="form-select" asp-items="@(Html.GetEnumSelectList<OrderPeriod>())"></select>
     <span asp-validation-for="OrderPeriod" class="text-danger d-block"></span>
 </div>
-<div class="col-12 mb-3">
-    <label asp-for="CookingCategoryId" class="form-label"></label>
-    <select asp-for="CookingCategoryId" class="form-select" asp-items="@(new SelectList(Model.CookingCategories, "Id", "Title", null))"></select>
-    <span asp-validation-for="CookingCategoryId" class="text-danger d-block"></span>
-</div>

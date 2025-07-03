@@ -128,7 +128,7 @@ namespace SaltStackers.Application.Services
                 var referral = await _membershipService.FindUserByNameAsync(model.Referral);
                 if (referral == null)
                 {
-                    return new ServiceResult(false, new()
+                    return new ServiceResult(false, errors: new()
                     {
                         new() { Level = ErrorLevel.Blocker, Description = "Referral code not exists!" }
                     });

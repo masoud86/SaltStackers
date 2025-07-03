@@ -60,7 +60,6 @@ namespace SaltStackers.Data.Context
         public DbSet<RecipeOwner> RecipeOwners { get; set; }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<RecipeTag> RecipeTags { get; set; }
-        public DbSet<IngredientCookingCategory> IngredientCookingCategories { get; set; }
         public DbSet<Package> Packages { get; set; }
         public DbSet<PackageAttachment> PackageAttachments { get; set; }
         public DbSet<PackageGroup> PackageGroups { get; set; }
@@ -121,7 +120,6 @@ namespace SaltStackers.Data.Context
             builder.ApplyConfiguration(new Mapping.Nutrition.RecipeOwnerMap());
             builder.ApplyConfiguration(new Mapping.Nutrition.TagMap());
             builder.ApplyConfiguration(new Mapping.Nutrition.RecipeTagMap());
-            builder.ApplyConfiguration(new Mapping.Nutrition.IngredientCookingCategoryMap());
             builder.ApplyConfiguration(new Mapping.Nutrition.PackageMap());
             builder.ApplyConfiguration(new Mapping.Nutrition.PackageAttachmentMap());
             builder.ApplyConfiguration(new Mapping.Nutrition.PackageGroupMap());

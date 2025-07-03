@@ -16,10 +16,6 @@ namespace SaltStackers.Domain.Models.Nutrition
 
         public DateTime EditDateTime { get; set; }
 
-        public int CookingCategoryId { get; set; }
-
-        public virtual IngredientCookingCategory? CookingCategory { get; set; }
-
         public virtual List<IngredientType>? IngredientTypes { get; set; }
     }
 }

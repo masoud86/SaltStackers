@@ -1311,7 +1311,7 @@ namespace SaltStackers.Application.Services
             var sameIngredient = await _nutritionRepository.GetIngredientByTitleAsync(model.Title.Trim().ToLower());
             if (sameIngredient != null)
             {
-                return new ServiceResult(false, new List<ServiceError> { new ServiceError { Code = "", Description = "Title is exist" } });
+                return new ServiceResult(false, new List<ServiceError> { new ServiceError { Code = "", Description = "Title exists" } });
             }
 
             var ingredient = _iMapper.Map<Ingredient>(model);
@@ -1322,7 +1322,7 @@ namespace SaltStackers.Application.Services
             {
                 await _logService.AddUserLogAsync(model.LogUserId, "Ingredient", "CreateIngredient", model.Title,
                     id.ToString(), model, model.LogInfo);
-                return new ServiceResult(true);
+                return new ServiceResult(true, new Dictionary<string, string> { { "Id", id.ToString() } });
             }
 
             return new ServiceResult(false);
@@ -1379,7 +1379,6 @@ namespace SaltStackers.Application.Services
             ingredient.Title = model.Title;
             ingredient.OrderPeriod = model.OrderPeriod;
             ingredient.UnitId = model.UnitId;
-            ingredient.CookingCategoryId = model.CookingCategoryId;
 
             var succeeded = await _nutritionRepository.EditIngredientAsync(ingredient);
             if (succeeded)
@@ -2198,12 +2197,6 @@ namespace SaltStackers.Application.Services
         {
             var ingredients = await _nutritionRepository.GetPlateIngredientsAsync(subCategory);
             return _iMapper.Map<List<PlateIngredientApi>>(ingredients);
-        }
-
-        public async Task<List<IngredientCookingCategoryDto>> GetCookingCategoriesAsync()
-        {
-            var cookingCategories = await _nutritionRepository.GetCookingCategoriesAsync();
-            return _iMapper.Map<List<IngredientCookingCategoryDto>>(cookingCategories);
         }
     }
 }

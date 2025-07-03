@@ -296,9 +296,5 @@ namespace SaltStackers.Domain.Interfaces
         Task<int> AddRecipeOwnerAsync(RecipeOwner model);
 
         Task<bool> RemoveRecipeOwnerAsync(RecipeOwner model);
-
-        Task<List<IngredientCookingCategory>> GetCookingCategoriesAsync();
-
-        Task<IngredientCookingCategory?> GetCookingCategoryAsync(int id);
     }
 }

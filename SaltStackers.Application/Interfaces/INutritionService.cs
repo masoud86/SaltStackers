@@ -277,7 +277,5 @@ namespace SaltStackers.Application.Interfaces
         Task<ServiceResult> CreateIngredientTypeSubCategoryAsync(IngredientTypeSubCategoryDto model);
 
         Task<List<PlateIngredientApi>> GetPlateIngreidnetsApiAsync(string subCategory);
-
-        Task<List<IngredientCookingCategoryDto>> GetCookingCategoriesAsync();
     }
 }

@@ -14,7 +14,6 @@
         <div class="row d-flex align-items-center">
             <div class="col"><span class="text-muted me-1">Raw Unit:</span><span class="user-select-all">@Model.Unit.Sign</span></div>
             <div class="col"><span class="text-muted me-1">Order Period:</span><span class="user-select-all">@Model.OrderPeriod</span></div>
-            <div class="col"><span class="text-muted me-1">Cooking Category:</span><span class="user-select-all">@Model.CookingCategory.Title</span></div>
             <div class="col text-end">
                 <button class="btn btn-sm ms-1 btn-primary" v-on:click.prevent="openNewIngredientType()"><i class="fa-fw @Icon.ButtonAdd me-1"></i>Add Type</button>
                 <a asp-area="Nutrition" asp-controller="Ingredient" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-sm ms-1 btn-secondary"><i class="fa-fw @Icon.ButtonEdit me-1"></i>Edit</a>

@@ -226,8 +226,6 @@ namespace SaltStackers.Application.Helpers
 
             CreateMap<RecipeOwner, RecipeOwnerDto>().ReverseMap();
 
-            CreateMap<IngredientCookingCategory, IngredientCookingCategoryDto>().ReverseMap();
-
             CreateMap<Package, PackageDto>().ReverseMap();
             CreateMap<PackageAttachment, PackageAttachmentDto>().ReverseMap();
             CreateMap<PackageGroup, PackageGroupDto>().ReverseMap();

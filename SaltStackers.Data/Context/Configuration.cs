@@ -39,7 +39,7 @@ namespace SaltStackers.Data.Context
 
             seeder.ApplicationSetting();
 
-            //seeder.Nutrition();
+            seeder.Nutrition();
         }
     }
 }

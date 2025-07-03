@@ -46,11 +46,6 @@ namespace SaltStackers.Application.ViewModels.Nutrition
         [Display(Name = "Order Period")]
         public OrderPeriod OrderPeriod { get; set; }
 
-        [Display(Name = "Cooking Category")]
-        public int CookingCategoryId { get; set; }
-        public IngredientCookingCategoryDto? CookingCategory { get; set; }
-        public List<IngredientCookingCategoryDto>? CookingCategories { get; set; }
-
         public DateTime EditDateTime { get; set; }
         public string EditDateTimeLocal => EditDateTime.ConvertFromUtcString();
     }

@@ -33,8 +33,7 @@ namespace SaltStackers.Web.Areas.Nutrition.Controllers
         {
             return View(new IngredientDto
             {
-                Units = await _nutritionService.GetUnitsAsync(new UnitFilters { PageSize = 100 }),
-                CookingCategories = await _nutritionService.GetCookingCategoriesAsync()
+                Units = await _nutritionService.GetUnitsAsync(new UnitFilters { PageSize = 100 })
             });
         }
 
@@ -70,7 +69,7 @@ namespace SaltStackers.Web.Areas.Nutrition.Controllers
 
                 if (createIngredient.Succeeded)
                 {
-                    return RedirectToAction("Index", "Ingredient", new { Area = "Nutrition" });
+                    return RedirectToAction("Manage", "Ingredient", new { Area = "Nutrition", id = createIngredient.Info["Id"] });
                 }
 
                 foreach (var error in createIngredient.Errors)
@@ -80,7 +79,6 @@ namespace SaltStackers.Web.Areas.Nutrition.Controllers
             }
 
             model.Units = await _nutritionService.GetUnitsAsync(new UnitFilters { PageSize = 100 });
-            model.CookingCategories = await _nutritionService.GetCookingCategoriesAsync();
 
             return View(model);
         }
@@ -98,7 +96,6 @@ namespace SaltStackers.Web.Areas.Nutrition.Controllers
             }
 
             ingredient.Units = await _nutritionService.GetUnitsAsync(new UnitFilters { PageSize = 100 });
-            ingredient.CookingCategories = await _nutritionService.GetCookingCategoriesAsync();
 
 
             return View(ingredient);
@@ -114,7 +111,7 @@ namespace SaltStackers.Web.Areas.Nutrition.Controllers
                 var result = await _nutritionService.UpdateIngredientAsync(model);
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Manage", "Ingredient", new { Area = "Nutrition", id = model.Id });
                 }
 
                 foreach (var error in result.Errors)
@@ -124,7 +121,6 @@ namespace SaltStackers.Web.Areas.Nutrition.Controllers
             }
 
             model.Units = await _nutritionService.GetUnitsAsync(new UnitFilters { PageSize = 100 });
-            model.CookingCategories = await _nutritionService.GetCookingCategoriesAsync();
 
             return View(model);
         }

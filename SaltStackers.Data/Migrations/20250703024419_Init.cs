@@ -224,22 +224,6 @@ namespace SaltStackers.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "IngredientCookingCategories",
-                schema: "nutrition",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Order = table.Column<int>(type: "int", nullable: false),
-                    EditDateTime = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "GETUTCDATE()")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_IngredientCookingCategories", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "OverheadCosts",
                 schema: "operation",
                 columns: table => new
@@ -533,19 +517,11 @@ namespace SaltStackers.Data.Migrations
                     Title = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     UnitId = table.Column<int>(type: "int", nullable: true),
                     OrderPeriod = table.Column<int>(type: "int", nullable: false),
-                    EditDateTime = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "GETUTCDATE()"),
-                    CookingCategoryId = table.Column<int>(type: "int", nullable: false, defaultValue: 1)
+                    EditDateTime = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "GETUTCDATE()")
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Ingredients", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Ingredients_IngredientCookingCategories_CookingCategoryId",
-                        column: x => x.CookingCategoryId,
-                        principalSchema: "nutrition",
-                        principalTable: "IngredientCookingCategories",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Ingredients_Units_UnitId",
                         column: x => x.UnitId,
@@ -1363,6 +1339,30 @@ namespace SaltStackers.Data.Migrations
                 values: new object[] { 1, true, "Canada" });
 
             migrationBuilder.InsertData(
+                schema: "nutrition",
+                table: "Units",
+                columns: new[] { "Id", "Category", "ConversionFactor", "HasCustomConversionFactor", "Sign", "Title" },
+                values: new object[,]
+                {
+                    { 1, "Solids", 1.0, false, "g", "Gram" },
+                    { 2, "Solids", 1000.0, false, "kg", "Kilogram" },
+                    { 3, "Solids", 454.0, false, "lb", "Pound" },
+                    { 4, "Solids", 28.350000000000001, false, "oz", "Ounce" },
+                    { 5, "Solids", null, true, "cup", "Cup" },
+                    { 6, "Solids", null, true, "tbsp", "Table Spoon" },
+                    { 7, "Solids", null, true, "tsp", "Tea Spoon" },
+                    { 8, "Solids", null, true, "ea", "Each" },
+                    { 9, "Solids", 0.34999999999999998, false, "pinch", "Pinch" },
+                    { 10, "Solids", null, true, "bunch", "Bunch" },
+                    { 11, "Liquids", 1.0, false, "ml", "Milliliter" },
+                    { 12, "Liquids", 1000.0, false, "l", "Liter" },
+                    { 13, "Liquids", 29.57, false, "fl-oz", "Fluid Ounce" },
+                    { 14, "Liquids", 236.56, false, "cup", "Cup" },
+                    { 15, "Liquids", 15.0, false, "tbsp", "Table Spoon" },
+                    { 16, "Liquids", 5.0, false, "tsp", "Tea Spoon" }
+                });
+
+            migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
                 columns: new[] { "RoleId", "UserId" },
                 values: new object[] { "72c2c695-2efd-4fcf-b083-dcb1f47fa314", "011b406e-94e4-480f-b0e3-d7ac50db372c" });
@@ -1502,12 +1502,6 @@ namespace SaltStackers.Data.Migrations
                 table: "Foods",
                 column: "Title",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Ingredients_CookingCategoryId",
-                schema: "nutrition",
-                table: "Ingredients",
-                column: "CookingCategoryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Ingredients_UnitId",
@@ -1906,10 +1900,6 @@ namespace SaltStackers.Data.Migrations
             migrationBuilder.DropTable(
                 name: "Kitchens",
                 schema: "operation");
-
-            migrationBuilder.DropTable(
-                name: "IngredientCookingCategories",
-                schema: "nutrition");
 
             migrationBuilder.DropTable(
                 name: "Units",
